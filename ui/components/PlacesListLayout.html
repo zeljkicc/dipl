@@ -1,0 +1,17 @@
+<template name="PlacesListLayout">
+
+<div class="mdl-layout mdl-js-layout">
+
+	<div class="mdl-grid">
+
+		{{#each places}}
+			<div class="mdl-cell mdl-cell--12-col">
+				{{> PlaceLayout}}
+			</div>
+		{{/each}}
+
+	</div>
+</div>
+
+	
+</template>

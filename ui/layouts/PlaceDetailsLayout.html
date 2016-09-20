@@ -1,0 +1,60 @@
+<template name="PlaceDetailsLayout">
+<main>
+	<div class="mdl-layout mdl-js-layout">			
+
+		<form>
+
+		<div class="mdl-grid">
+
+			<div class="mdl-cell mdl-cell--12-col">
+				<div class="demo-card-image mdl-card mdl-shadow--2dp width-auto">
+		  			<div class="mdl-card__title mdl-card--expand"></div>
+		  			<div class="mdl-card__actions">
+		   				<span class="demo-card-image__filename">Image.jpg</span>
+		  			</div>
+				</div>
+			</div>
+
+		<div class="mdl-cell mdl-cell--12-col left-aling ">
+			
+		    	<h3 class="left-align margin-bottom-0px">{{place.name}} - {{place.type}}</h3>
+		    
+		</div>
+
+	
+			
+    			   					
+			
+
+		
+
+		<div class="mdl-cell mdl-cell--12-col left-aling">
+			
+    			 <h5 class="left-align margin-top-0px">{{place.description}}</h5>
+   				
+  		</div>
+
+  		
+
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<button class="js-back mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent " name="register">
+  				Back
+			</button>
+
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-add" name="login">
+  				Add
+			</button>
+		</div>
+
+			</div>
+
+	  	</form>
+
+
+
+	  </div>
+
+	</main>	
+	
+</template>

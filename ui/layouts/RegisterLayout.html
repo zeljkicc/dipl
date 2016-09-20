@@ -1,0 +1,66 @@
+<template name="RegisterLayout">
+	<main>
+	<h1 class="login-title">Welcome to TripPlanner!</h1>
+
+
+	<form>
+
+		<div class="mdl-grid">
+
+		<div class="mdl-cell mdl-cell--12-col">
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
+		    	<input class="mdl-textfield__input js-username" type="text" id="username" name="username">
+		    	<label class="mdl-textfield__label" for="username">Username</label>
+		  	</div>
+		</div>
+
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		    	<input class="mdl-textfield__input js-password" type="password" id="password" name="password">
+		    	<label class="mdl-textfield__label" for="password">Password</label>
+		  	</div>
+		</div>
+
+		<div class="mdl-cell mdl-cell--12-col">
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		    	<input class="mdl-textfield__input js-firstname" type="text" id="firstname" name="firstname">
+		    	<label class="mdl-textfield__label" for="firstname">First name</label>
+		  	</div>
+		</div>
+
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		    	<input class="mdl-textfield__input js-lastname" type="text" id="lastname" name="lastname">
+		    	<label class="mdl-textfield__label" for="lastname">Last name</label>
+		  	</div>
+		</div>
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		    	<input class="mdl-textfield__input js-telephone" type="tel" pattern="-?[0-9]*(\.[0-9]+)?" id="telephone" name="telephone">
+		    	<label class="mdl-textfield__label" for="telephone">Telephone</label>
+		    	<span class="mdl-textfield__error">Phone number requered!</span>
+		  	</div>
+		</div>
+
+
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent back" name="back">
+  				Back
+			</button>
+
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent register" name="register">
+  				Register
+			</button>
+		</div>
+
+			</div>
+
+	  	</form>
+
+		
+	</main>	
+</template>

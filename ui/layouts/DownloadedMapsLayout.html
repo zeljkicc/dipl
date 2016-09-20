@@ -1,0 +1,15 @@
+<template name="DownloadedMapsLayout">
+	<main>
+		<h4>
+			List of my downloaded maps.
+		</h4>
+
+		<a href="/mapslist"><button  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-login">Download new map</button></a>
+
+			<ul class="maps-list mdl-list">
+			{{#each maps}}
+				{{> MapsListItemLayout}}
+			{{/each}}
+			</ul>
+	</main>
+</template>

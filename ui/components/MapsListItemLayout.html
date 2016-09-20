@@ -1,0 +1,23 @@
+<template name="MapsListItemLayout">
+	<main>
+		<li class="mdl-list__item mdl-list__item--three-line js-map-list-item">
+
+		    <span class="mdl-list__item-primary-content">
+		      <i class="material-icons mdl-list__item-avatar">person</i>
+		      <span>{{city}}</span>
+		      <span class="mdl-list__item-text-body">
+		        {{state}}
+		      </span>
+		    </span>
+
+		    <span class="mdl-list__item-secondary-content">
+		    {{#if downloaded city}}
+		    	<i class="material-icons mdl-list__item-icon">check_circle</i>
+		    {{else}}
+				{{size}}MB
+		    {{/if}}
+		    </span>
+
+    	</li>
+	</main>
+</template>

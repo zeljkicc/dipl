@@ -1,0 +1,82 @@
+/* CSS declarations go here */
+/*.login-buttons, .login-title{
+	text-align: center;
+}*/
+
+body{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+
+}
+
+main{
+	text-align: center;
+	overflow: hidden;
+	box-sizing: border-box;
+
+} 
+
+
+
+
+.add-new-tab{
+	width:50%;
+	margin: 0px;
+}
+
+
+/*za sliku prilikom dodavanja novog objekta*/
+.demo-card-image.mdl-card {
+	
+  /*width: 256px;*/
+  min-height: 150px;
+  background: url('../assets/demos/image_card.jpg') center / cover;
+}
+.demo-card-image > .mdl-card__actions {
+  height: 52px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.demo-card-image__filename {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.demo-card-image{
+	margin:auto;
+}
+
+/*dodato za template mesta, koji se prikazuje u listi*/
+.demo-card-wide > .mdl-card__title {
+  color: #000;
+  height: 176px; 
+  background: url('../assets/demos/welcome_card.jpg') center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+.demo-card-wide.mdl-card{
+	margin:auto;	
+}
+
+.link-no-decoration{
+	text-decoration: none;
+}
+
+.left-align{
+	text-align: left;
+}
+
+.margin-bottom-0px{
+	margin-bottom: 0px;
+}
+
+.margin-top-0px{
+	margin-top: 0px;
+}
+
+#map { height: 550px; }

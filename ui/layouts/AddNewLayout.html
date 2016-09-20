@@ -1,0 +1,20 @@
+<template name="AddNewLayout">
+	<main>
+	<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+  <div class="mdl-tabs__tab-bar">
+      <a href="#starks-panel" class="mdl-tabs__tab is-active add-new-tab">Location</a>
+      <a href="#lannisters-panel" class="mdl-tabs__tab add-new-tab">Information</a>
+  </div>
+
+  <div class="mdl-tabs__panel is-active" id="starks-panel">
+    {{> MapLayout}}
+  </div>
+  <div class="mdl-tabs__panel" id="lannisters-panel">
+    
+    {{> InformationLayout}}
+
+  </div>
+</div>
+
+</main>
+</template>
