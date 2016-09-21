@@ -1,0 +1,63 @@
+<template name="HomeLayout">
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Title</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Pera Pera</span>
+    <nav class="mdl-navigation">
+
+
+    <ul class="demo-list-icon mdl-list">
+  <a href="/home" class="my-nav-a"><li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">home</i>
+    Home
+</span>
+  </li></a>
+ <a href="/placeslist" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">format_list_bulleted</i>
+    Places List
+  </span>
+  </li> </a>
+ <a href="/addnew" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">add_location</i>
+    Add New Place
+  </span>
+  </li></a>
+ <a href="/downloadedmaps" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">map</i>
+    My Maps
+  </span>
+  </li></a>
+</ul>
+
+
+    <a class="mdl-navigation__link" href="/map">Home</a>
+      <a class="mdl-navigation__link" href="/placeslist">Places List</a>
+      <a class="mdl-navigation__link" href="/addnew">Add New Place</a>      
+      <a class="mdl-navigation__link" href="/downloadedmaps">My Maps</a>
+    </nav>
+  </div>
+
+
+
+<div class="mdl-layout__content height-100">
+	
+	{{> MapLayout}}
+
+</div>
+
+</div>
+	
+</template>
