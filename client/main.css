@@ -13,8 +13,8 @@ body{
 
 main{
 	text-align: center;
-	overflow: hidden;
-	box-sizing: border-box;
+	/*overflow: hidden;
+	box-sizing: border-box;*/
 
 } 
 
@@ -80,3 +80,64 @@ main{
 }
 
 #map { height: 550px; }
+
+
+//za ikonice
+.grade-icon{
+	background-color:#0000FF;
+}
+
+//za rating
+.stars{
+
+}
+
+#rating{
+	width:230px;
+	margin:auto;
+}
+
+.rating-wrapper{
+	text-align: center;
+}
+
+.list-item-comment{
+	padding: 10px;
+	text-align: left;
+	border: 1px solid rgba(63,81,181, 0.3);
+	margin: 10px;
+	border-radius: 10px;
+	box-shadow: 5px 5px 3px rgba(63,81,181, 0.3);
+}
+
+.text-blue{
+	color:rgba(63,81,181, 0.87);
+	margin-top: 0px;
+	border-bottom: 1px solid rgba(63,81,181, 0.87);
+	padding-bottom: 10px;
+}
+
+.blue-icon{
+	color:rgba(63,81,181, 0.87) !important; 
+}
+
+.js-my-fixed-header{
+	padding-left: 16px !important;
+}
+
+.js-my-back-arrow{
+	margin-right: 25px;
+}
+
+.my-drawer{
+	width: 80%;
+}
+
+.my-nav-a{
+	text-decoration: none;
+
+}
+
+.my-nav-a li:active{
+	background-color: rgba(63,81,181, 0.3);
+}

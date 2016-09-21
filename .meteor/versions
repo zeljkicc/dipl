@@ -3,6 +3,7 @@ autopublish@1.0.7
 autoupdate@1.2.11
 babel-compiler@6.9.1
 babel-runtime@0.1.11
+barbatus:stars-rating@1.1.1
 base64@1.0.9
 binary-heap@1.0.9
 blaze@2.1.8
@@ -40,6 +41,7 @@ kadira:blaze-layout@2.3.0
 kadira:flow-router@2.10.1
 lai:collection-extensions@0.1.4
 launch-screen@1.0.12
+less@2.6.5
 livedata@1.0.18
 logging@1.1.15
 meteor@1.2.17

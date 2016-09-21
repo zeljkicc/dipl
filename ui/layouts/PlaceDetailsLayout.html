@@ -19,11 +19,7 @@
 			
 		    	<h3 class="left-align margin-bottom-0px">{{place.name}} - {{place.type}}</h3>
 		    
-		</div>
-
-	
-			
-    			   					
+		</div>    			   					
 			
 
 		
@@ -50,6 +46,27 @@
 			</div>
 
 	  	</form>
+
+		<hr>
+
+	  	<h4 class="margin-bottom-0px">Add review for {{place.name}}</h4>
+
+	  	{{> AddNewCommentLayout}}
+
+	  	<hr>
+
+		<h4 class="margin-bottom-0px">Other visitors reviews:</h4>
+
+		{{> CommentsListLayout}}
+
+
+
+
+
+	  	
+
+
+	  	
 
 
 

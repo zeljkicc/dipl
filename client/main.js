@@ -283,8 +283,15 @@ Template.PlacesListLayout.helpers({
   'places': function(){  
         return Places.find(); 
         //FlowRouter.go('placedetails');    
+  },
+});
+
+Template.PlacesListLayout.events({
+  'click .js-my-back-arrow': function(){
+    FlowRouter.go("home");
   }
 });
+
 
 
 
@@ -340,6 +347,63 @@ Template.MapsListItemLayout.helpers({
     return false;
   }
 });
+
+
+Template.MapsListItemLayout.events({
+'click .js-map-list-item': function(){
+  if(Meteor.isCordova){
+
+//za download fajla sa servera na uredjaj
+    var fileTransfer = new FileTransfer();
+var uri = encodeURI("http://some.server.com/download.php");
+
+fileTransfer.download(
+    uri,
+    fileURL,
+    function(entry) {
+        console.log("download complete: " + entry.toURL());
+    },
+    function(error) {
+        console.log("download error source " + error.source);
+        console.log("download error target " + error.target);
+        console.log("download error code" + error.code);
+    },
+    false,
+    {
+        headers: {
+            "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+        }
+    }
+);
+
+
+  }
+}
+});
+
+Template.AddNewCommentLayout.events({
+  'click .js-add-comment':function(event){
+          event.preventDefault();
+          var title = $(".js-title").val();
+          var content = $(".js-content").val();
+          var grade =  $('#rating').data('userrating');
+          var place_id = FlowRouter.getParam('id');
+         // var user_id = 
+          var date = new Date();
+          var author = "Pera Pera";
+
+
+          Comments.insert({
+            'title': title,
+            'content': content,
+            'grade':    grade,
+            'place_id': place_id,
+            'date': date,
+            'author': author
+          });
+  }
+})
+
 
 /*Template.MapsListItemLayout.onRendered(function(){
 var db2 = sqlitePlugin.openDatabase('mymaps.db');
@@ -398,7 +462,74 @@ $("body").on("swipeleft",function(){
 
 
 
-}); 
+});
+
+
+
+Template.CommentsListLayout.helpers({
+  comments: function(){
+    var id = FlowRouter.getParam('id');
+    return Comments.find({place_id: id});
+  }
+}) 
+
+Template.CommentsListItemLayout.helpers({
+  show_date: function(date){
+    var date = new Date(date);
+    return date.getDate()  + ". " + (date.getMonth() + 1) + ". " + date.getFullYear() + ".";
+  },
+  grades: function(grade){
+    var ret = [];
+
+    for(var i =0; i<5; i++){
+     // ret[i] = new Object();
+      ret[i] = false;
+    }
+    for(var i = 0; i<grade; i++){
+      ret[i]= true;
+    }
+
+    return ret;
+    /*switch(grade){
+      case 1:
+      ret.push(0);
+        return ret;
+        break;
+      case 2:
+      ret.push(1);
+      ret.push(2);
+        return ret;
+        break;
+      case 3:
+      ret.push(1);
+      ret.push(2);
+      ret.push(3);
+        return ret;
+        break;
+      case 4:
+       ret.push(1);
+      ret.push(2);
+      ret.push(3);
+       ret.push(3);
+        return ret;
+        break;
+      case 5:
+       ret.push(1);
+      ret.push(2);
+      ret.push(3);
+       ret.push(3);
+       ret.push(3);
+        return ret;
+        break;
+      default:
+         ret.push(1);
+      ret.push(2);
+      ret.push(3);
+        return ret;
+
+    } */
+  }
+})
 
 //za mape
 var map;
@@ -526,7 +657,8 @@ var places = Places.find().fetch();
 
 for (i = 0; i < places.length; i++) { //da se ubaci switch case??
   if(places[i].type == "hotel"){
-    L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon}).addTo(map);
+    L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).addTo(map).
+    on('click', onClickMarker);
   }
   else if(places[i].type == "restaurant"){
     L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon}).addTo(map);
@@ -543,6 +675,10 @@ for (i = 0; i < places.length; i++) { //da se ubaci switch case??
 
 
 }); 
+
+ function onClickMarker(e){
+      FlowRouter.go("/placedetails/" + e.target.options.id);
+ }
 
 function onLocationFound(e) {
     var radius = e.accuracy / 2;

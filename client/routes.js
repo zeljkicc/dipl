@@ -44,10 +44,10 @@ FlowRouter.route('/placedetails/:id', {
 	}
 });
 
-FlowRouter.route('/map', {
-	name: 'map',
+FlowRouter.route('/home', {
+	name: 'home',
 	action(){
-		BlazeLayout.render('MainLayout', {main: 'MapLayout'});
+		BlazeLayout.render('MainLayout', {main: 'HomeLayout'});
 	}
 });
 
