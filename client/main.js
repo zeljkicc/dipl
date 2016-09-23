@@ -4,6 +4,10 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './main.html';
 
 
+//Meteor.subscribe('near-places');
+
+
+
 /////////kada se startuje uredjaj, za inicijalizaciju koja zavisi od cordove
 var db = null;
  
@@ -201,21 +205,73 @@ Template.LoginLayout.events({
             event.preventDefault();
             console.log("Login submitted.");
 
-           var username = $(".js-username").val();
+            var username = $(".js-username").val();
             var password = $(".js-password").val();
 
-            var user = Users.findOne({
-              "username": username,
-              "password": password
-            });
+            Meteor.call('login', [username, password], 
+              function(error, result){
 
-            if(user!=undefined){
+                var user = result;
+                if(user!=undefined){
               console.log("Login success. " + user.username);
-              FlowRouter.go('placeslist');
+
+              Session.set("userdata", user);
+              
+
+              //perzistiranje u sqlite bazi
+if(Meteor.isCordova){
+        var db = sqlitePlugin.openDatabase('userdata.db');
+db.transaction(function (txn) {
+
+  txn.executeSql('DROP TABLE IF EXISTS data;', [], function (tx, res) {
+    console.log("Created database if not exist"); // {"answer": 42} 
+  }); 
+
+  txn.executeSql('CREATE TABLE IF NOT EXISTS data (id TEXT,username TEXT, password TEXT, firstname TEXT, lastname TEXT, telephone TEXT);', [], function (tx, res) {
+    console.log("Created database if not exist"); // {"answer": 42} 
+  });
+
+  txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?);", [user._id, user.username, user.password, user.firstname, user.lastname, user.telephone], function (tx, res) {
+    console.log("Inserted values"); // {"answer": 42} 
+  });
+
+
+
+  txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
+    console.log("Userdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
+    var userdata = new Object();
+     userdata._id = res.rows.item(0).id;
+  userdata.username = res.rows.item(0).username;
+  userdata.password = res.rows.item(0).password;
+  userdata.firstname = res.rows.item(0).firstname;
+  userdata.lastname = res.rows.item(0).lastname;
+  userdata.telephone = res.rows.item(0).telephone;
+
+  
+  });
+
+
+
+
+
+});
+
+ }
+
+FlowRouter.go('home');
+
+
             }
             else{
               console.log("Login failed.");
             } 
+
+
+            });       
+
+            
+
+            
 
         },
         'click .js-register': function(event){
@@ -224,6 +280,39 @@ Template.LoginLayout.events({
         	FlowRouter.go('register');
         }
     });
+
+Template.HomeLayout.onCreated(function(){
+ //this.showRadius = new ReactiveVar(false);
+
+ if(Session.get('radius')==undefined){
+   Session.set('radius', 1);
+ }
+ if(Session.get('showRadius') == undefined){
+  Session.set('showRadius', true);
+ }
+});
+
+
+Template.HomeLayout.helpers({
+  userdata: function(){
+      return Session.get("userdata");
+  },
+  radius_val: function(){
+      return Session.get('radius');
+  },
+  showRadius: function(){
+      return Session.get('showRadius');
+  }
+});
+
+Template.HomeLayout.events({
+  'click .js-radius-switch-input':function(event){
+    Session.set('showRadius', !Session.get('showRadius'));
+  },
+  'change .js-radius-slider':function(event){
+    Session.set('radius', e.target.value);
+  }
+});
 
 
 Template.RegisterLayout.events({
@@ -268,16 +357,22 @@ Template.AddNewLayout.events({
 
           var latlng = newPlaceMarker.getLatLng();
 
-          Places.insert({
-            'name': name,
-            'description': description,
-            'type':    type,
-            'loc': {
-                    'type':"Point",
-                    'coordinates': [latlng.lng, latlng.lat] }
-          });
+          Meteor.call('insertPlace', [name, description, type, latlng, (Session.get('userdata'))._id]);
+
+        
+  },
+  'click .js-my-back-arrow': function(){
+    FlowRouter.go("home");
   }
 });
+
+Template.PlacesListLayout.onCreated(function(){
+
+
+      this.subscribe('near-places', [Session.get('location'), Session.get('radius')]);
+
+  });
+
 
 Template.PlacesListLayout.helpers({
   'places': function(){  
@@ -303,11 +398,33 @@ Template.PlaceDetailsLayout.helpers({
   }
 });
 
+Template.PlaceDetailsLayout.onCreated(function(){
+  var id = FlowRouter.getParam('id');
+  this.subscribe('place-details', id);
+});
+
+Template.PlaceDetailsLayout.events({
+  'click .js-my-back-arrow': function(){
+    FlowRouter.go('home');
+  }
+})
+
+
+Template.MapsListLayout.onCreated(function(){  
+  this.subscribe('maps');
+});
 
 Template.MapsListLayout.helpers({
   maps: function(){
     return Maps.find();
   } 
+
+});
+
+Template.MapsListLayout.events({
+  'click .js-my-back-arrow': function(){
+    FlowRouter.go("downloadedmaps");
+  }
 
 });
 
@@ -334,6 +451,12 @@ Template.DownloadedMapsLayout.helpers({
   return Session.get('myMaps');
 
 } 
+});
+
+Template.DownloadedMapsLayout.events({
+ 'click .js-my-back-arrow': function(){
+    FlowRouter.go("home");
+  } 
 });
 
 
@@ -382,25 +505,26 @@ fileTransfer.download(
 });
 
 Template.AddNewCommentLayout.events({
-  'click .js-add-comment':function(event){
+  'click .js-add-comment': function(event){
           event.preventDefault();
+
+          var userdata = Session.get("userdata");
+
           var title = $(".js-title").val();
           var content = $(".js-content").val();
           var grade =  $('#rating').data('userrating');
           var place_id = FlowRouter.getParam('id');
-         // var user_id = 
+          var user_id = userdata._id;
           var date = new Date();
-          var author = "Pera Pera";
+          var author = userdata.firstname + " " + userdata.lastname;
 
+          $(".js-title").val("");
+          $(".js-content").val("");
 
-          Comments.insert({
-            'title': title,
-            'content': content,
-            'grade':    grade,
-            'place_id': place_id,
-            'date': date,
-            'author': author
-          });
+          Meteor.call("insertComment", [title, content, grade, place_id, date, author, user_id]);
+  },
+  'click .js-my-back-arrow': function(){
+    FlowRouter.go("home");
   }
 })
 
@@ -421,8 +545,29 @@ Session.set('myMaps', res.rows._array);
 
 }); */
 
+Template.PlaceLayout.onCreated(function(){
+  this.num_reviews = new ReactiveVar(0);
+});
 
 
+Template.PlaceLayout.helpers({
+
+  num_reviews: function(id){
+    var instance = Template.instance();
+      Meteor.call('num_reviews', id, function(error, result){
+        if(result!= null && result!= undefined)
+          
+        instance.num_reviews.set(result);
+      });
+      return Template.instance().num_reviews.get();
+    //  
+  },
+  rating: function(id){
+      Meteor.call('avg_rating', id, function(error, result){       
+          return result;
+      });
+  }
+})
 
 
 
@@ -464,12 +609,16 @@ $("body").on("swipeleft",function(){
 
 });
 
+Template.CommentsListLayout.onCreated(function(){
+  var id = FlowRouter.getParam('id');
+  this.subscribe('place-comments', id);
+})
 
 
 Template.CommentsListLayout.helpers({
   comments: function(){
-    var id = FlowRouter.getParam('id');
-    return Comments.find({place_id: id});
+   // var id = FlowRouter.getParam('id');
+    return Comments.find({}, {sort: {date: -1}});
   }
 }) 
 
@@ -490,52 +639,44 @@ Template.CommentsListItemLayout.helpers({
     }
 
     return ret;
-    /*switch(grade){
-      case 1:
-      ret.push(0);
-        return ret;
-        break;
-      case 2:
-      ret.push(1);
-      ret.push(2);
-        return ret;
-        break;
-      case 3:
-      ret.push(1);
-      ret.push(2);
-      ret.push(3);
-        return ret;
-        break;
-      case 4:
-       ret.push(1);
-      ret.push(2);
-      ret.push(3);
-       ret.push(3);
-        return ret;
-        break;
-      case 5:
-       ret.push(1);
-      ret.push(2);
-      ret.push(3);
-       ret.push(3);
-       ret.push(3);
-        return ret;
-        break;
-      default:
-         ret.push(1);
-      ret.push(2);
-      ret.push(3);
-        return ret;
-
-    } */
   }
 })
+
+
+
+
+Template.MapLayout.events({
+  'click .js-button-locate':function(e){
+    e.preventDefault();
+
+    //map.locate({setView: true, maxZoom: 16});
+
+    map.panTo(Session.get('location'));
+    //map.setZoom(16);
+
+    //console.log(Session.get('location'));
+  }
+});
+
+
 
 //za mape
 var map;
 var myMarker, newPlaceMarker;
 var myCircle;
+var markersPlaces = [];
+var layerGroupMarkers = new L.LayerGroup();
+
  Template.MapLayout.onRendered(function(){
+layerGroupMarkers = new L.LayerGroup();
+  var template =  this;
+  this.autorun(function() {
+  template.subscribe('places-within-box', Session.get("map-bounds"), function(){
+     //Set the reactive session as true to indicate that the data have been loaded
+     layerGroupMarkers = new L.LayerGroup();
+      setPlaces();
+  });
+});
 
   L.Icon.Default.imagePath = '/images';
 //za mapu
@@ -566,7 +707,8 @@ var layerInstance = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }
 else{//ako je Cordova cita iz baze (za sada, trebalo bi ako je offline i izabere mapu)
 var bounds1 = null;
-db.readTransaction(function (txn) {
+var db1 = sqlitePlugin.openDatabase({name: 'krusevac.db'});
+db1.readTransaction(function (txn) {
         txn.executeSql('SELECT bounds FROM metadata', [], function (tx, res) {
           var bounds = res.rows.item(0).split(",");
 
@@ -594,7 +736,9 @@ map = L.map('map', {
 
 
  map.addLayer(layerInstance); 
- 
+
+
+
 
 }
 //map.invalidateSize();
@@ -618,6 +762,30 @@ layerInstance.on('load', function (event) {
   //  cordova.plugin.pDialog.dismiss();//puca!!!!!
   }
 });
+
+
+
+
+
+
+//postavljen listener za pomeranje mape
+ map.on('moveend', function() { 
+     console.log(map.getBounds());
+
+
+     var bounds = map.getBounds()
+     ,boundObject = { 
+        southWest: [bounds._southWest.lat, bounds._southWest.lng],
+        northEast: [bounds._northEast.lat, bounds._northEast.lng] 
+      };
+
+     Session.set("map-bounds", boundObject);
+});
+ 
+
+
+
+
 
 
 //var h = $(window).height() - $(".mdl-layout__header").height();
@@ -651,22 +819,7 @@ if(FlowRouter.getRouteName() == "addnew"){
  }
 
 
-//postavljanje markera za places
-var places = Places.find().fetch();
 
-
-for (i = 0; i < places.length; i++) { //da se ubaci switch case??
-  if(places[i].type == "hotel"){
-    L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).addTo(map).
-    on('click', onClickMarker);
-  }
-  else if(places[i].type == "restaurant"){
-    L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon}).addTo(map);
-  }
-  else{
-    L.marker(places[i].loc.coordinates.reverse()).addTo(map);
-  }
-}
    
 
 
@@ -691,11 +844,51 @@ function onLocationFound(e) {
         }
 
     myCircle = L.circle(e.latlng, radius).addTo(map);
+
+     L.circle(e.latlng, 1*1000).addTo(map); //radius krug
+
+   
+    Session.set("location", e.latlng);
+    Session.set('radius', 1);//1 km
+  //  setPlaces();
 }
 
 function onLocationError(e) {
     alert(e.message);
 }
+
+
+function setPlaces(){
+  
+if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
+  layerGroupMarkers.clearLayers();
+  map.removeLayer(layerGroupMarkers);
+}
+var loc = Session.get("location");
+//postavljanje markera za places
+var places = Places.find().fetch();
+//ubaciti radius
+//markersPlaces = null;
+
+for (i = 0; i < places.length; i++) { //da se ubaci switch case??
+  if(places[i].type == "hotel"){
+    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).on('click', onClickMarker));
+    
+    
+  }
+  else if(places[i].type == "restaurant"){
+    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon}).on('click', onClickMarker));
+  }
+  else{
+    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse()).on('click', onClickMarker));
+  }
+}
+
+
+console.log(layerGroupMarkers);
+map.addLayer(layerGroupMarkers);
+}
+
 
 
 
@@ -728,3 +921,15 @@ var PlaceIcon = L.Icon.extend({
 var hotelIcon = new PlaceIcon({iconUrl: 'images/hotel_0star.png'}),
     restaurantIcon = new PlaceIcon({iconUrl: 'images/restaurant.png'});
 
+
+//cordova plugin - offline, online
+document.addEventListener("offline", onOffline, false);
+document.addEventListener("online", onOnline, false);
+ 
+function onOffline() {
+    console.log("Went offline :(");
+}
+
+function onOnline() {
+    console.log("Went online :)");
+}

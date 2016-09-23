@@ -34,12 +34,15 @@
 
 	<div class="mdl-grid">
 
+  {{#if Template.subscriptionsReady}}
 		{{#each places}}
 			<div class="mdl-cell mdl-cell--12-col">
 				{{> PlaceLayout}}
 			</div>
 		{{/each}}
-
+  {{else}}
+    {{> spinner}}
+  {{/if}}
 	</div>
 </div>
 

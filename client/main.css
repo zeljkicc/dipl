@@ -55,9 +55,10 @@ main{
   height: 176px; 
   background: url('../assets/demos/welcome_card.jpg') center / cover;
 }
+
 .demo-card-wide > .mdl-card__menu {
   color: #fff;
-}
+} 
 
 .demo-card-wide.mdl-card{
 	margin:auto;	
@@ -140,4 +141,29 @@ main{
 
 .my-nav-a li:active{
 	background-color: rgba(63,81,181, 0.3);
+}
+
+.mdl-my-fab{
+	position: absolute !important;
+	right: 10px;
+	bottom: 50px;
+}
+
+.js-radius-switch{
+	margin-left:16px;
+	margin-bottom:10px;
+}
+
+
+/*proba sa fotografijama*/
+.demo-card-image.mdl-card {
+  background: url('http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg') center / cover;
+}
+
+.demo-card-wide > .mdl-card__title {
+  background: url('http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg') center / cover;
+}
+
+.mdl-card__title{
+color:#fff !important;
 }

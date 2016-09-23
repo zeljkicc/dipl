@@ -1,6 +1,35 @@
 <template name="PlaceDetailsLayout">
-<main>
-	<div class="mdl-layout mdl-js-layout">			
+
+<div class="mdl-layout mdl-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row js-my-fixed-header">
+      <!-- Title --><i class="material-icons js-my-back-arrow">arrow_back</i>
+      <span class="mdl-layout-title">{{place.name}} details</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+
+<!--za search-->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                  mdl-textfield--floating-label mdl-textfield--align-right">
+        <label class="mdl-button mdl-js-button mdl-button--icon"
+               for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="sample"
+                 id="waterfall-exp">
+        </div>
+        </div>
+
+    </div>
+  </header>
+
+    <main class="mdl-layout__content">
+
+<div class="page-content">
+
+		
 
 		<form>
 
@@ -33,15 +62,16 @@
   		
 
 
-		<div class="mdl-cell mdl-cell--12-col">
-		  	<button class="js-back mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent " name="register">
+	<!--	<div class="mdl-cell mdl-cell-/-12-col">
+		  	<button class="js-back mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent " name="register">
   				Back
 			</button>
 
-			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-add" name="login">
+			<button class="mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent js-add" name="login">
   				Add
 			</button>
-		</div>
+		</div> -->
+
 
 			</div>
 
@@ -58,20 +88,18 @@
 		<h4 class="margin-bottom-0px">Other visitors reviews:</h4>
 
 		{{> CommentsListLayout}}
-
-
-
-
-
 	  	
+	 </div>
 
 
-	  	
+</main>
+
+</div>
 
 
 
-	  </div>
 
-	</main>	
+
+
 	
 </template>
