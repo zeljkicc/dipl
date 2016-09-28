@@ -1,0 +1,20 @@
+ <template name="AdminCommentItemLayout">
+ 	<tr>
+      <td class="mdl-data-table__cell--non-numeric">{{title}}</td>
+     <!-- <td class="mdl-data-table__cell-/-non-numeric">{{content}}</td> -->
+      <td class="mdl-data-table__cell--non-numeric">{{grade}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{place_id}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{show_date date}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{author}}</td>
+<td>
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-details-button">
+  View
+</button>
+<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-delete-button">
+  Delete
+</button>
+
+      </td>
+    </tr>
+ </template>

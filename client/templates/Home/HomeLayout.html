@@ -1,0 +1,74 @@
+<template name="HomeLayout">
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Tripplanner</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">{{userdata.firstname}} {{userdata.lastname}}</span>
+    {{userdata.username}}
+    
+
+    <nav class="mdl-navigation">
+
+
+    <ul class="demo-list-icon mdl-list margin-bottom-0px">
+  <a href="/home" class="my-nav-a"><li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">home</i>
+    Home
+</span>
+  </li></a>
+ <a href="/placeslist" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">format_list_bulleted</i>
+    Places List
+  </span>
+  </li> </a>
+ <a href="/addnew" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">add_location</i>
+    Add New Place
+  </span>
+  </li></a>
+ <a href="/downloadedmaps" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">map</i>
+    My Maps
+  </span>
+  </li></a>
+</ul>
+
+<hr class="margin-top-0px">
+
+<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect js-radius-switch" for="switch-1">
+  <input type="checkbox" id="switch-1" class="mdl-switch__input js-radius-switch-input"  checked={{showRadius}} >
+  <span class="mdl-switch__label">Radius</span>
+</label>
+
+
+<input class="mdl-slider mdl-js-slider js-radius-slider" type="range"
+  min="1" max="10" value="{{radius_val}}" step="1" tabindex="0">
+
+<hr>
+
+    </nav>
+  </div>
+
+
+
+<div class="mdl-layout__content height-100">
+	
+	{{> MapLayout}}
+
+</div>
+
+</div>
+	
+</template>

@@ -2,14 +2,22 @@ FlowRouter.route('/', {
 	name: 'main',
 	action(){
 		if(Meteor.isCordova){
-var db = sqlitePlugin.openDatabase('mymaps.db');
+//Meteor._sleepForMs(1000);
+
+//var db = sqlitePlugin.openDatabase('userdata.db');
+if(dbUserdata==null){
+	dbUserdata = sqlitePlugin.openDatabase('userdata.db');
+}
+var db = dbUserdata;
+
+if(db){
 		db.transaction(function (txn) {
 
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
-    console.log("Mapdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
+    console.log("Userdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
 
-    if(res.rows.length > 0){
+    if(res.rows.length > 0){//ako smo se prethodno ulogovali postojace db
     	var userdata = new Object();
     	userdata._id = res.rows.item(0).id;
   		userdata.username = res.rows.item(0).username;
@@ -24,17 +32,25 @@ var db = sqlitePlugin.openDatabase('mymaps.db');
     else{
     	FlowRouter.go('login');
     }
-  });
+  }, function(error){
+  	FlowRouter.go('login');
+  }); 
 
-
+//FlowRouter.go('login');
 
 });
+	}
+	else {FlowRouter.go('login');}
 
+	//}//ako ne postoji db
 
-	}//end isCordova
-		
+//db.close();
+	}///end isCordova
+	else{//ako je web aplikacija
 		FlowRouter.go('login');
 	}
+	}
+	
 });
 
 

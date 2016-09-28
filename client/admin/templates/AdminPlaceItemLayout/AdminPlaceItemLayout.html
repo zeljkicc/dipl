@@ -1,0 +1,23 @@
+ <template name="AdminPlaceItemLayout">
+ 	<tr>
+      <td class="mdl-data-table__cell--non-numeric">{{name}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{type}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{user_id}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{show_date timestamp}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{city}}</td>
+      <td colspan="3">
+      	<!-- Accent-colored raised button with ripple -->
+<a href="/admin/places/{{_id}}"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-details-button">
+  Details
+</button></a>
+<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-delete-button">
+  Delete
+</button>
+<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-change-button">
+  Change
+</button>
+      </td>
+    </tr>
+ </template>

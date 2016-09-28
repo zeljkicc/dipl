@@ -56,8 +56,32 @@ Meteor.methods({
             'loc': {
                     'type':"Point",
                     'coordinates': [data[3].lng, data[3].lat] }, //latlng
-              'user_id': data[4] //user id
+              'user_id': data[4],//user id
+               'timestamp': new Date(),
+               'city': data[5]
           });
+    },
+
+    insertPlaces: function(array){
+      for(var i=0; i<array.length; i++){
+          Places.insert({
+            'name': array[i].name, //name
+            'description': array[i].description,//description
+            'type':    array[i].type,//type
+            'loc': {
+                    'type':"Point",
+                    'coordinates': [parseFloat(array[i].lng), parseFloat(array[i].lat)] }, //latlng
+              'user_id': array[i].user_id,//user id
+               'timestamp': new Date(),
+               'city': array[i].city
+          }, function(error, result){
+            if(result==null){
+              return false;
+            }
+          });
+      } //name TEXT, description TEXT, type TEXT, lat TEXT, lng TEXT, user_id TEXT
+
+      return true;
     },
 
     insertComment: function(data){
@@ -79,7 +103,52 @@ Meteor.methods({
   },
   avg_rating: function(id){
            return 3;
-  }   
+  },
+
+
+
+
+
+  //////////admin deo/////////////////////////
+
+  //mape
+  addMap: function(data){
+    console.log("dodavanje mape server");
+     return Maps.insert({
+        city: data[0],
+        state: data[1],
+        size: data[2],
+        bounds: data[3],
+        uri: data[4],
+        timestamp: new Date()
+
+      });
+  },
+  deleteMap: function(id){
+    console.log("brisanje mape server");
+    return Maps.remove({
+        _id: id
+      });
+  },
+  deletePlace: function(id){
+    console.log("brisanje place-a server");
+    return Places.remove({
+        _id: id
+      });
+  },
+    deleteUser: function(id){
+    console.log("brisanje place-a server");
+    return Users.remove({
+        _id: id
+      });
+  },
+    deleteComment: function(id){
+       console.log("brisanje review-a server");
+       return Comments.remove({
+        _id: id
+      });
+    }
+      
     
 	
 }); //pucaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!!!!!!!!!!!!!!!!

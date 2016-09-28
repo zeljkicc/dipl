@@ -33,21 +33,24 @@ L.TileLayer.MBTiles = L.TileLayer.extend({
 
 
 		var layer = this;
-		this.mbTilesDB.transaction(function(tx) {
-			tx.executeSql("select quote(tile_data) as tile_data from tiles where zoom_level = ? and tile_column = ? and tile_row = ?;", 
+		
+		//Pukne i ne izvrsava se vise transakcije, samo se povecava broj u redu
+		this.mbTilesDB._txnQueue.length = 0;
+		//ispraviti, mozda Session promenjiva, pa kada je reazlicito od nula velicina 
+		//queue-a da se ponovo otvori baza (inicijalizuje layer) ?
+
+		this.mbTilesDB.transaction(function(txn) {
+			txn.executeSql("select quote(tile_data) as tile_data from tiles where zoom_level = ? and tile_column = ? and tile_row = ?;", 
 				[z, x, y], 
 				function (tx, res) {
 	
-	//////////https://mobilegeo.wordpress.com/2013/06/07/mbtiles-and-openlayers/
-	//var base64String = new Buffer(((res.rows.item(0).tile_data).substring(2)).replace(/([\da-fA-F]{2}) ?/g, "0x$1 "), 'hex').toString('base64')
 			tile.src = base64Prefix + hexToBase64((res.rows.item(0).tile_data).substring(2));
-	//tile.src = base64Prefix + base64String;
-		
-
-			}, function (e) {
-				console.log('error with executeSql: ', e.message);
+			},
+			function(error){
+				console.log(error);
 			});
 		}); 
+
 
 
 		

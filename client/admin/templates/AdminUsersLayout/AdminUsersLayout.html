@@ -1,0 +1,19 @@
+<template name="AdminUsersLayout">
+	<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Username</th>
+      <th class="mdl-data-table__cell--non-numeric">Password</th>
+      <th class="mdl-data-table__cell--non-numeric">Firstname</th>
+      <th class="mdl-data-table__cell--non-numeric">Lastname</th>
+      <th class="mdl-data-table__cell--non-numeric">Telephone</th>
+      <th class="mdl-data-table__cell--non-numeric"></th>
+    </tr>
+  </thead>
+  <tbody>
+   {{#each users}}
+ 		{{> AdminUserItemLayout}}
+ 	{{/each}}
+  </tbody>
+</table>
+</template>

@@ -1,0 +1,52 @@
+.mdl-data-table{
+	margin:auto;
+	margin-top: 20px;
+}
+
+.admin-page{
+	background-color: #e6ecff;
+}
+
+td { display:table-cell;
+
+}
+
+.adminfab{
+	position: absolute !important;
+	right: 50px;
+	bottom: 50px;
+}
+
+#pop-up-form, #pop-up-form-place{
+	display:none;
+	background-color: white;
+	width: 330px;
+	padding:10px;
+	margin:auto;
+	border-radius:10px;
+	border:2px solid black;
+	text-align: center;
+}
+
+.width-100{
+	width: 100%;
+}
+
+#admin-map{
+	height:300px;
+	border-radius:10px;
+	border:2px solid rgba(63,81,181, 0.3);
+}
+
+.place-details{
+	background-color: white;
+	padding:10px;
+	border-radius:10px;
+	border:2px solid rgba(63,81,181, 0.3);
+}
+
+#place-details-sub{
+	text-align: left;
+	margin-left: 15%;
+	margin-right: 15%;
+}

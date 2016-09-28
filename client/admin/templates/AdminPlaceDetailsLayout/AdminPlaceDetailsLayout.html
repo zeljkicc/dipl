@@ -1,0 +1,28 @@
+<template name="AdminPlaceDetailsLayout">
+
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col place-details">
+  	  	<u><h4>Place {{place.name}} information</h4></u>
+<div id="place-details-sub">
+  	<h5>Type: {{place.type}}</h5>
+
+  	<h5>City: {{place.city}}</h5>
+
+  	<h6>Description: {{place.description}}</h6>
+ </div>
+
+  	<h5>Place location:</h5>
+
+  	<div id="admin-map">
+  		
+  	</div>
+
+  </div>
+  <div class="mdl-cell mdl-cell--6-col place-details">
+		<h5 class="margin-bottom-0px">User reviews:</h5>
+		{{> CommentsListLayout}}
+
+  </div>
+</div>
+		
+</template>

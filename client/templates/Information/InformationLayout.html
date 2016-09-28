@@ -1,0 +1,74 @@
+<template name="InformationLayout">			
+
+		<form>
+
+		<div class="mdl-grid">
+
+		<div class="image-buttons">
+			<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored js-photo-button">
+  				<i class="material-icons">photo</i>
+			</button>
+			<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored js-camera-button">
+  				<i class="material-icons">camera</i>
+			</button>
+		</div>
+			<div class="mdl-cell mdl-cell--12-col">
+				<div class="demo-card-image mdl-card mdl-shadow--2dp">
+		  			<div class="mdl-card__title mdl-card--expand"></div>
+		  			<div class="mdl-card__actions">
+		   				<span class="demo-card-image__filename">Image.jpg</span>
+		  			</div>
+				</div>
+			</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		    	<input class="mdl-textfield__input js-name" type="text" id="name" name="name">
+		    	<label class="mdl-textfield__label" for="name">Name</label>
+		  	</div>
+		</div>
+
+		<div class="mdl-cell mdl-cell--12-col">
+			<div class="mdl-textfield mdl-js-textfield">
+    			 <textarea class="mdl-textfield__input js-description" type="text" rows= "3" id="description" name="description"></textarea>
+   				 <label class="mdl-textfield__label" for="description">Description</label>
+  			</div>
+  		</div>
+
+  		<div class="mdl-cell mdl-cell--12-col">
+			<div class="mdl-textfield mdl-js-textfield">
+    			 <input class="mdl-textfield__input js-city" type="text" id="city" name="city">
+   				 <label class="mdl-textfield__label" for="city">City</label>
+  			</div>
+  		</div>
+
+  		<div class="mdl-cell mdl-cell--12-col">
+
+			<select name="type-select" id="type-select" class="js-type-select">
+				<option value="hotel">Hotel</option>
+				<option value="restaurant">Restaurant</option>
+			</select>
+
+		</div>
+
+
+		<div class="mdl-cell mdl-cell--12-col">
+		  	<button class="js-back mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent " name="register">
+  				Back
+			</button>
+
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-add" name="login">
+  				Add
+			</button>
+		</div>
+
+			</div>
+
+	  	</form>
+
+
+
+
+
+
+
+</template>

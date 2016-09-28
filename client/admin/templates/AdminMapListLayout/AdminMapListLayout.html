@@ -1,0 +1,36 @@
+<template name="AdminMapListLayout">
+{{#if Template.subscriptionsReady}}
+	<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+	  <thead>
+	    <tr>
+	      <th class="mdl-data-table__cell--non-numeric">Id</th>
+	      <th class="mdl-data-table__cell--non-numeric">City</th>
+	      <th class="mdl-data-table__cell--non-numeric">State</th>
+	      <th class="mdl-data-table__cell--non-numeric">Size</th>
+	      <th class="mdl-data-table__cell--non-numeric">Bounds</th>
+	      <th class="mdl-data-table__cell--non-numeric">Uri</th>
+	      <th class="mdl-data-table__cell--non-numeric">Timestamp</th>
+	      <th class="mdl-data-table__cell--non-numeric" colspan="3">
+	      	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored addnewmap-button width-100">
+  Add New Map
+</button>
+
+	      </th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	   {{#each maps}}
+	   		<tr>
+	 			{{> AdminMapItemLayout}}
+	 		</tr>
+	 	{{/each}}
+	  </tbody>
+	</table>
+{{else}}
+	{{> spinner}}
+{{/if}}
+	<!-- Element to pop up -->
+            {{> AdminAddNewMapLayout}} 
+
+
+</template>

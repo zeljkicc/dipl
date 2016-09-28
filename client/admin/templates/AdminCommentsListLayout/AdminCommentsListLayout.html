@@ -1,0 +1,31 @@
+<template name="AdminCommentsListLayout">
+{{#if Template.subscriptionsReady}}
+	<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Title</th>
+    <!--  <th class="mdl-data-table__cell-/-non-numeric">Content</th> -->
+      <th class="mdl-data-table__cell--non-numeric">Grade</th>
+      <th class="mdl-data-table__cell--non-numeric">Place id</th>
+      <th class="mdl-data-table__cell--non-numeric">Date added</th>
+      <th class="mdl-data-table__cell--non-numeric">Author</th>
+      <th class="mdl-data-table__cell--non-numeric">
+
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+  
+     {{#each comments}}
+   		{{> AdminCommentItemLayout}}
+   	 {{/each}}
+
+  
+
+  </tbody>
+</table>
+  {{else}}
+    {{> spinner}}
+{{/if}}
+
+</template>

@@ -1,0 +1,24 @@
+ <template name="AdminMapItemLayout">
+      <td class="mdl-data-table__cell--non-numeric">{{_id}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{city}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{state}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{size}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{bounds}}</td> 
+      <td class="mdl-data-table__cell--non-numeric">{{uri}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{show_date stimestamp}}</td>
+      <td colspan="3">
+      	<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-view-button">
+  View
+</button>
+<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-delete-button">
+  Delete
+</button>
+<!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored js-change-button">
+  Change
+</button>
+      </td>
+   
+ </template>

@@ -1,0 +1,25 @@
+<template name="AdminPlacesListLayout">
+	<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Name</th>
+      <th class="mdl-data-table__cell--non-numeric">Type</th>
+      <th class="mdl-data-table__cell--non-numeric">User_id</th>
+      <th class="mdl-data-table__cell--non-numeric">Timestamp</th>
+      <th class="mdl-data-table__cell--non-numeric">City</th>
+      <th class="mdl-data-table__cell--non-numeric" colspan="3">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored addnewplace-button width-100">
+         Add New Place
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+   {{#each users}}
+ 		{{> AdminPlaceItemLayout}}
+ 	{{/each}}
+  </tbody>
+</table>
+
+{{> AdminAddNewPlaceLayout}}
+</template>

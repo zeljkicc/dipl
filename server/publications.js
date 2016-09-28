@@ -47,6 +47,11 @@ Meteor.publish('place-comments', function(id){
 });
 
 Meteor.publish('maps', function(){
-	Meteor._sleepForMs(2000);
 	return Maps.find({}, {limit: 10});
-})
+});
+
+Meteor.publish('new-places', function(timestamp){
+	console.log('Timestamp za publish near places' + timestamp);
+	console.log(Places.find({timestamp:{$gt: new Date(timestamp)}}).fetch());
+	return Places.find({timestamp:{$gt: new Date(timestamp)}});
+});

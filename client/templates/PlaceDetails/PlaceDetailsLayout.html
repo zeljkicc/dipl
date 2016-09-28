@@ -1,0 +1,105 @@
+<template name="PlaceDetailsLayout">
+
+<div class="mdl-layout mdl-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row js-my-fixed-header">
+      <!-- Title --><i class="material-icons js-my-back-arrow">arrow_back</i>
+      <span class="mdl-layout-title">{{place.name}} details</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+
+<!--za search-->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                  mdl-textfield--floating-label mdl-textfield--align-right">
+        <label class="mdl-button mdl-js-button mdl-button--icon"
+               for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="sample"
+                 id="waterfall-exp">
+        </div>
+        </div>
+
+    </div>
+  </header>
+
+    <main class="mdl-layout__content">
+
+<div class="page-content">
+
+		
+
+		<form>
+
+		<div class="mdl-grid">
+
+			<div class="mdl-cell mdl-cell--12-col">
+				<div class="demo-card-image mdl-card mdl-shadow--2dp width-auto">
+		  			<div class="mdl-card__title mdl-card--expand"></div>
+		  			<div class="mdl-card__actions">
+		   				<span class="demo-card-image__filename">Image.jpg</span>
+		  			</div>
+				</div>
+			</div>
+
+		<div class="mdl-cell mdl-cell--12-col left-aling ">
+			
+		    	<h3 class="left-align margin-bottom-0px">{{place.name}} - {{place.type}}</h3>
+		    
+		</div>    			   					
+			
+
+		
+
+		<div class="mdl-cell mdl-cell--12-col left-aling">
+			
+    			 <h5 class="left-align margin-top-0px">{{place.description}}</h5>
+   				
+  		</div>
+
+  		
+
+
+	<!--	<div class="mdl-cell mdl-cell-/-12-col">
+		  	<button class="js-back mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent " name="register">
+  				Back
+			</button>
+
+			<button class="mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent js-add" name="login">
+  				Add
+			</button>
+		</div> -->
+
+
+			</div>
+
+	  	</form>
+
+		<hr>
+
+	  	<h4 class="margin-bottom-0px">Add review for {{place.name}}</h4>
+
+	  	{{> AddNewCommentLayout}}
+
+	  	<hr>
+
+		<h4 class="margin-bottom-0px">Other visitors reviews:</h4>
+
+		{{> CommentsListLayout}}
+	  	
+	 </div>
+
+
+</main>
+
+</div>
+
+
+
+
+
+
+	
+</template>

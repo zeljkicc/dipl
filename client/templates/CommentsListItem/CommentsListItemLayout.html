@@ -1,0 +1,25 @@
+<template name="CommentsListItemLayout">
+	
+		<li class="list-item-comment">
+		      <b><h5 class="text-blue margin-bottom-0px">{{title}}</h5></b>
+		      <i><div>{{author}} - {{show_date date}}</div></i>
+		     
+		      <h6 class="margin-top-0px margin-bottom-0px">{{content}}</h6>
+		     
+		
+
+
+		    <div>
+		    	
+		    	{{#each g in grades grade}}
+		    		{{#if g}}
+					<i class="material-icons mdl-list__item-icon grade_icon blue-icon">star</i>
+		    		{{else}}
+		    		<i class="material-icons mdl-list__item-icon grade_icon blue-icon">star_border</i>
+		    		{{/if}}
+		    	{{/each}}
+		  	</div>
+
+    	</li>
+	
+</template>

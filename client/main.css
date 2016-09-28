@@ -167,3 +167,8 @@ main{
 .mdl-card__title{
 color:#fff !important;
 }
+
+.image-buttons{
+	text-align:right;
+	width: 100%;
+}

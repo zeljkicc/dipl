@@ -1,0 +1,29 @@
+<template name="MapsListItemLayout">
+	<main>
+		<li class="mdl-list__item mdl-list__item--three-line js-map-list-item">
+
+		    <span class="mdl-list__item-primary-content">
+		      <i class="material-icons mdl-list__item-avatar">person</i>
+		      <span>{{city}}</span>
+		      <span class="mdl-list__item-text-body">
+		        {{state}}
+		      </span>
+		    </span>
+
+		    <span class="mdl-list__item-secondary-content">
+		    {{#if downloaded city}}
+		    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-open-map-button" data-id="{{_id}}">
+		    	Open map
+		    	</button>
+		    {{else}}
+			    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-download-map-button" data-id="{{_id}}">
+	  				Download - 
+	  				{{size}}MB
+				</button>
+				
+		    {{/if}}
+		    </span>
+
+    	</li>
+	</main>
+</template>
