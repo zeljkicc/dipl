@@ -35,7 +35,7 @@ Template.MapsListItemLayout.events({
             cordova.plugin.pDialog.setProgress(perc);
             
 
-        } else {
+        } else {//ako ne uspe da izracuna procente, prikazace ispord
             if(statusDom.innerHTML == "") {
                 statusDom.innerHTML = "Loading";
                 cordova.plugin.pDialog.setMessage("Loading");
@@ -68,13 +68,13 @@ var destinationDirectory = null;
         var db = dbMapdata;
 db.transaction(function (txn) {
 
-  txn.executeSql('CREATE TABLE IF NOT EXISTS data (city TEXT, state TEXT, size INTEGER);', [], function (tx, res) {
-    console.log("Created database if not exist"); // {"answer": 42} 
+  txn.executeSql('CREATE TABLE IF NOT EXISTS data (city TEXT, state TEXT, size REAL, lat REAL, lng REAL);', [], function (tx, res) {
+    console.log("Created database pocetak AAAAAAAAAa if not exist"); // {"answer": 42} 
   });
 
-   txn.executeSql("INSERT INTO data VALUES (?, ?, ?);", [instance.city, instance.state, instance.size], function (tx, res) {
-    console.log("Inserted values for new map " + instance.city); // {"answer": 42} 
-  });
+    txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?);", [instance.city, instance.state, parseFloat(instance.size), instance.center.lat, instance.center.lng], function (tx, res) {
+    console.log("Inserted values for new map Downloaded AAAA"); // {"answer": 42} ////RADILLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  }); 
 
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {

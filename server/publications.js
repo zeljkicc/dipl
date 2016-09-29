@@ -1,5 +1,5 @@
 Meteor.publish('near-places', function(data){
-Meteor._sleepForMs(2000);
+//Meteor._sleepForMs(2000);
 	console.log("Server " + JSON.stringify(data) + " " + data[0].lat + " " +  data[0].lng + " " + data[1]);
 	 if(data) {
 
@@ -54,4 +54,10 @@ Meteor.publish('new-places', function(timestamp){
 	console.log('Timestamp za publish near places' + timestamp);
 	console.log(Places.find({timestamp:{$gt: new Date(timestamp)}}).fetch());
 	return Places.find({timestamp:{$gt: new Date(timestamp)}});
+});
+
+Meteor.publish('new-comments', function(timestamp){
+	console.log('Timestamp za publish near comments' + timestamp);
+	console.log(Comments.find({date:{$gt: new Date(timestamp)}}).fetch());
+	return Comments.find({date:{$gt: new Date(timestamp)}});
 });

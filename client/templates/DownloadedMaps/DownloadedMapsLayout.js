@@ -1,5 +1,11 @@
 Template.DownloadedMapsLayout.onRendered(function(){
-var db2 = sqlitePlugin.openDatabase('mymaps.db');
+	var db2 = null;
+	if(dbMapdata == null){
+db2 = sqlitePlugin.openDatabase('mymaps.db');
+}
+else{
+db2 = dbMapdata;
+}
 db2.transaction(function (txn) {
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {

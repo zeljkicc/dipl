@@ -48,6 +48,8 @@ Meteor.methods({
     	check(data[3].lat, Number);
     	check(data[3].lng, Number);
     	check(data[4].lng, String); */
+    //  var newDate = new Date();
+     // newDate.setHours(newDate.getHours() + 2);
     		
   Places.insert({
             'name': data[0], //name
@@ -90,10 +92,30 @@ Meteor.methods({
             'content': data[1],
             'grade':    data[2],
             'place_id': data[3],
-            'date': data[4],
-            'author': data[5],
-            'user_id': data[6]
+            'date': new Date(),
+            'author': data[4],
+            'user_id': data[5]
           });
+    },
+
+    insertComments: function(array){
+      for(var i=0; i<array.length; i++){
+          Comments.insert({
+            'title': array[i].title,
+            'content': array[i].content,
+            'grade':    array[i].grade,
+            'place_id': array[i].placeid,
+            'date': new Date(),
+            'author': array[i].author,
+            'user_id': array[i].userid
+          }, function(error, result){
+            if(result==null){
+              return false;
+            }
+          });
+      } //name TEXT, description TEXT, type TEXT, lat TEXT, lng TEXT, user_id TEXT
+
+      return true;
     },
 
     num_reviews: function(id){
@@ -120,7 +142,8 @@ Meteor.methods({
         size: data[2],
         bounds: data[3],
         uri: data[4],
-        timestamp: new Date()
+        timestamp: new Date(),
+        center: data[5]
 
       });
   },

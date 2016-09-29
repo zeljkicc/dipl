@@ -1,5 +1,6 @@
 Template.LoginLayout.onCreated(function(){
 	localStorage.timestamp = new Date("2016-09-24T17:24:54.579Z");
+  localStorage.timestamp_comments = new Date("2016-09-24T17:24:54.579Z");
 });
 
 Template.LoginLayout.onRendered(function(){
@@ -22,6 +23,7 @@ $("body").on("swipeleft",function(){
 
 
 });
+
 
 
 Template.LoginLayout.events({

@@ -155,20 +155,15 @@ main{
 }
 
 
-/*proba sa fotografijama*/
-.demo-card-image.mdl-card {
-  background: url('http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg') center / cover;
+.js-type-select{
+	width:100%;
+	border:none;
+	border-bottom:1px solid rgba(0,0,0,.12);
+	font-size: 16px;
+	font-family: "Helvetica","Arial",sans-serif;
+	padding: 4px 0;
+	color:rgba(0,0,0,.8);
 }
-
-.demo-card-wide > .mdl-card__title {
-  background: url('http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg') center / cover;
-}
-
-.mdl-card__title{
-color:#fff !important;
-}
-
-.image-buttons{
-	text-align:right;
-	width: 100%;
+.js-type-select:focus{
+	outline:none;
 }

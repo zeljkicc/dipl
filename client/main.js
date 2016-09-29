@@ -13,6 +13,7 @@ var db = null;
 
 dbUserdata = null;
 dbMapdata = null;
+
  
 document.addEventListener('deviceready', function() {
 
@@ -85,20 +86,21 @@ db.transaction(function (txn) {
     console.log("Created database if not exist"); // {"answer": 42} 
   }); */
 
-  txn.executeSql('CREATE TABLE IF NOT EXISTS data (city TEXT, state TEXT, size INTEGER);', [], function (tx, res) {
-    console.log("Created database if not exist"); // {"answer": 42} 
+ txn.executeSql('CREATE TABLE IF NOT EXISTS data (city TEXT, state TEXT, size REAL, lat REAL, lng REAL);', [], function (tx, res) {
+    console.log("Created database pocetak AAAAAAAAAa if not exist"); // {"answer": 42} 
   });
 
-  /*txn.executeSql("INSERT INTO data VALUES ('Krusevac', 'Serbia', 13.5);", [], function (tx, res) {
-    console.log("Inserted values"); // {"answer": 42} 
+ /*  txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?);", ["Krusevac", "Serbia", 13, 43.546515, 21.1512121], function (tx, res) {
+    console.log("Inserted values for new map ////RADILOOOOOOOOOOOOOOOOOOOOoo"); // {"answer": 42} ////RADILLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
   }); */
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
     console.log("Provera, na startovanju telefona: Mapdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
-  });
+  }); 
 
 
 });
+
 
 
 
@@ -223,6 +225,7 @@ function onOnline() {
     console.log("Went online :)");
 
 
+//za pending review-e
     if(Meteor.isCordova){
 if(navigator.connection.type != Connection.NONE){
   //  var db = sqlitePlugin.openDatabase('userdata.db');
@@ -258,6 +261,70 @@ Meteor.call('insertPlaces', res.rows._array, function(error, result){
 
   }
         }
+
+
+
+
+
+///za pending komentare
+
+        if(Meteor.isCordova){
+if(navigator.connection.type != Connection.NONE){
+  //  var db = sqlitePlugin.openDatabase('userdata.db');
+   var db = dbUserdata;
+
+            db.transaction(function (txn) {
+
+txn.executeSql("SELECT * FROM pendingcomments;", [], function (tx, res) {
+    console.log("Pending comments: " + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+Meteor.call('insertComments', res.rows._array, function(error, result){
+  console.log("Callback za insertComments " + result);
+  if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
+    db.transaction(function (txn) {
+    txn.executeSql("DROP TABLE IF EXISTS pendingcomments;", [], function (tx, res) {
+        console.log("Droped table pendingcomments: " + res);
+
+    });   
+  });
+
+
+
+
+  }
+});
+
+
+  });
+
+ 
+
+  });
+
+
+  }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 }
 
@@ -388,7 +455,37 @@ map = L.map('map', {
 
  map.addLayer(layerInstance); 
 
- map.setView(new L.LatLng(43.320857, 21.895122), 16);
+//centar Nisa
+ //map.setView(new L.LatLng(43.320857, 21.895122), 16);
+ //map.fitBounds(bounds1);
+
+//postavljanje centra prikazane mape
+  var db2 = null;
+  if(dbMapdata == null){
+db2 = sqlitePlugin.openDatabase('mymaps.db');
+}
+else{
+db2 = dbMapdata;
+}
+db2.transaction(function (txn) {
+
+  txn.executeSql("SELECT * FROM data WHERE city = ?;", [Session.get("open-map")], function (tx, res) {
+    console.log("Mapdata helper: " + JSON.stringify(res.rows._array)); // {"answer": 42}
+
+map.setView(new L.LatLng(res.rows.item(0).lat, res.rows.item(0).lng), 16);
+
+console.log("Postavljen view mape lat:" + res.rows.item(0).lat + ", lng: " + res.rows.item(0).lng);
+    //return  res.rows._array;
+  }); 
+
+
+});
+
+
+
+
+
+  //map.setView(new L.LatLng(43.320857, 21.895122), 16);
 
 
 //ako smo offline i ako je kordova, unutar setPlaces ispitujemo isto i izaberemo izvor

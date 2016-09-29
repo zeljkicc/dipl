@@ -43,3 +43,10 @@ FlowRouter.route('/admin/comments', {
 		BlazeLayout.render('AdminMainLayout', {main: 'AdminCommentsListLayout'});
 	}
 });
+
+FlowRouter.route('/admin/addnewmap', {
+	name: 'admin-addnewmap',
+	action(){
+		BlazeLayout.render('AdminMainLayout', {main: 'AdminAddNewMapLayout'});
+	}
+});

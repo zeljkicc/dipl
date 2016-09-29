@@ -20,7 +20,7 @@ td { display:table-cell;
 #pop-up-form, #pop-up-form-place{
 	display:none;
 	background-color: white;
-	width: 330px;
+	width: 600px;
 	padding:10px;
 	margin:auto;
 	border-radius:10px;
@@ -43,10 +43,23 @@ td { display:table-cell;
 	padding:10px;
 	border-radius:10px;
 	border:2px solid rgba(63,81,181, 0.3);
+
 }
 
 #place-details-sub{
 	text-align: left;
 	margin-left: 15%;
 	margin-right: 15%;
+}
+
+#add-new-map{
+	height:450px;
+
+	border-radius:10px;
+	border:2px solid rgba(63,81,181, 0.3);
+}
+
+.add-map-form{
+	width:330px;
+	margin:auto;
 }
