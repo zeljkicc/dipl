@@ -1,7 +1,8 @@
 Template.DownloadedMapsLayout.onRendered(function(){
 	var db2 = null;
 	if(dbMapdata == null){
-db2 = sqlitePlugin.openDatabase('mymaps.db');
+//db2 = sqlitePlugin.openDatabase('mymaps.db');
+db2 = sqlitePlugin.openDatabase({name: 'mymaps.db', location:'default'});
 }
 else{
 db2 = dbMapdata;
@@ -9,9 +10,13 @@ db2 = dbMapdata;
 db2.transaction(function (txn) {
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
-    console.log("Mapdata helper: " + JSON.stringify(res.rows._array)); // {"answer": 42}
+    console.log("Mapdata helper: " + JSON.stringify(res.rows.length)); // {"answer": 42}
+    var array = [];
+    for(var i =0; i<res.rows.length; i++){
+    	array.push(res.rows.item(i));
+    }
 
-Session.set('myMaps', res.rows._array);
+Session.set('myMaps', array);
     //return  res.rows._array;
   }); 
 

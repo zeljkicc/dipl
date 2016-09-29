@@ -17,9 +17,41 @@ dbMapdata = null;
  
 document.addEventListener('deviceready', function() {
 
+//za geolokaciju - cordovin geo plugin
+var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
+                                                  geolocationError,
+                                                  { timeout: 30000, enableHighAccuracy: true
+                                                   });
+
+    // onSuccess Callback 
+    //   This method accepts a `Position` object, which contains 
+    //   the current GPS coordinates 
+    // 
+    function geolocationSuccess(position) {
+      //  var element = document.getElementById('geolocation');
+        console.log( 'Latitude: '  + position.coords.latitude +
+                            ' Longitude: ' + position.coords.longitude);
+    }
+ 
+    // onError Callback receives a PositionError object 
+    // 
+    function geolocationError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+
+
+
+
+
+
+
+
+
+
 if(dbUserdata==null){
-dbUserdata = sqlitePlugin.openDatabase('userdata.db');
-//dbUserdata = window.sqlitePlugin.openDatabase({name: "userdata.db", location: 'default', createFromLocation: 1});
+//dbUserdata = sqlitePlugin.openDatabase('userdata.db');
+dbUserdata = window.sqlitePlugin.openDatabase({name: "userdata.db", location: 'default'});
 }
 
 
@@ -52,6 +84,16 @@ dbUserdata = sqlitePlugin.openDatabase('userdata.db');
   });
 };
 
+/*  var db = sqlitePlugin.openDatabase({name: "krusevac.db", location: 'default', createFromLocation: 1});
+  
+  db.transaction(function(tx) {
+    tx.executeSql('select quote(tile_data) as tile_data from tiles where zoom_level = ? and tile_column = ? and tile_row = ?;', [0,0,0], function(tx, rs) {
+      console.log('Procitano iz baze :) : ' + JSON.stringify(rs.rows.item(0)));
+    }, function(tx, error) {
+      console.log('SELECT error: ' + error.message);
+    });
+  }); */
+
 
 /*copyDatabaseFile('krusevac.db').then(function () {
   // success! :)
@@ -76,8 +118,8 @@ dbUserdata = sqlitePlugin.openDatabase('userdata.db');
 
 */
 
-
-dbMapdata = sqlitePlugin.openDatabase('mymaps.db');
+//dbMapdata = sqlitePlugin.openDatabase('mymaps.db');
+dbMapdata = sqlitePlugin.openDatabase({name: 'mymaps.db', location:'default'});
 
 var db = dbMapdata;
 db.transaction(function (txn) {
@@ -95,7 +137,7 @@ db.transaction(function (txn) {
   }); */
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
-    console.log("Provera, na startovanju telefona: Mapdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
+    console.log("Provera, na startovanju telefona: Mapdata: " + JSON.stringify(res.rows.length)); // {"answer": 42} 
   }); 
 
 
@@ -234,8 +276,12 @@ if(navigator.connection.type != Connection.NONE){
             db.transaction(function (txn) {
 
 txn.executeSql("SELECT * FROM pendingplaces;", [], function (tx, res) {
-    console.log("Pending places: " + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
-Meteor.call('insertPlaces', res.rows._array, function(error, result){
+    console.log("Pending places: " + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+var array = [];
+for(var i = 0; i < res.rows.length; i++){
+  array.push(res.rows.item(i));
+}
+Meteor.call('insertPlaces', array, function(error, result){
   console.log("Callback za insertPlaces " + result);
   if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
     db.transaction(function (txn) {
@@ -276,8 +322,13 @@ if(navigator.connection.type != Connection.NONE){
             db.transaction(function (txn) {
 
 txn.executeSql("SELECT * FROM pendingcomments;", [], function (tx, res) {
-    console.log("Pending comments: " + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
-Meteor.call('insertComments', res.rows._array, function(error, result){
+    console.log("Pending comments: " + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+var array = [];
+for(var i = 0; i < res.rows.length; i++){
+  array.push(res.rows.item(i));
+}
+
+Meteor.call('insertComments', array, function(error, result){
   console.log("Callback za insertComments " + result);
   if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
     db.transaction(function (txn) {
@@ -420,7 +471,9 @@ var layerInstance = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 else if(Meteor.isCordova){//ako je Cordova cita iz baze (za sada, trebalo bi ako je offline i izabere mapu)
 var bounds1 = null;
 var city = Session.get("open-map").toLowerCase();
-var db1 = sqlitePlugin.openDatabase({name: city + '.db'});
+//var db1 = sqlitePlugin.openDatabase({name: city + '.db'});
+var db1 = sqlitePlugin.openDatabase({name: city + '.db', location: 'default', androidDatabaseImplementation: 2});
+//var db1 = sqlitePlugin.openDatabase({name: "krusevac" + '.db', location: 'default', createFromLocation: 1, androidDatabaseImplementation: 2});
 console.log("Otvaranje offline mape (baze): " + city);
 
 db1.readTransaction(function (txn) {
@@ -462,7 +515,9 @@ map = L.map('map', {
 //postavljanje centra prikazane mape
   var db2 = null;
   if(dbMapdata == null){
-db2 = sqlitePlugin.openDatabase('mymaps.db');
+//db2 = sqlitePlugin.openDatabase('mymaps.db');
+db2 = sqlitePlugin.openDatabase({name:'mymaps.db', location:'default'});
+
 }
 else{
 db2 = dbMapdata;
@@ -470,7 +525,7 @@ db2 = dbMapdata;
 db2.transaction(function (txn) {
 
   txn.executeSql("SELECT * FROM data WHERE city = ?;", [Session.get("open-map")], function (tx, res) {
-    console.log("Mapdata helper: " + JSON.stringify(res.rows._array)); // {"answer": 42}
+    console.log("Mapdata helper: " + JSON.stringify(res.rows.length)); // {"answer": 42}
 
 map.setView(new L.LatLng(res.rows.item(0).lat, res.rows.item(0).lng), 16);
 
@@ -565,7 +620,9 @@ if(FlowRouter.getRouteName() == "addnew"){
     if(newPlaceMarker!=undefined){
       map.removeLayer(newPlaceMarker);
        }
+       if(myMarker)
       map.removeLayer(myMarker);
+    if(myCircle)
       map.removeLayer(myCircle);
 
    
@@ -642,7 +699,11 @@ else if(Meteor.isCordova){
 txn.executeSql("SELECT * FROM offlineplaces WHERE city = ?;", [Session.get('open-map')], function (tx, res) {
     console.log("Offline places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
 
-      setMarkersSQLite(res.rows._array);
+var array = [];
+for(var i = 0; i< res.rows.length; i++){
+  array.push(res.rows.item(i));
+}
+      setMarkersSQLite(array);
 
 
 

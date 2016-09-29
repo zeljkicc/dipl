@@ -13,6 +13,103 @@
 Template.MainLayout.onCreated(function(){
 	var template = this;
 
+
+  //
+if(Meteor.isCordova){  //////////
+if(navigator.connection.type != Connection.NONE){
+    //var db = sqlitePlugin.openDatabase('userdata.db');
+    var db = dbUserdata;
+
+            db.transaction(function (txn) {
+
+txn.executeSql("SELECT * FROM pendingplaces;", [], function (tx, res) {
+    console.log("Pending places: " + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+    var array = [];
+    for(var i =0; i<res.rows.length; i++){
+      array.push(res.rows.item(i));
+    }
+Meteor.call('insertPlaces', array, function(error, result){
+  console.log("Callback za insertPlaces " + result);
+  if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
+    db.transaction(function (txn) {
+    txn.executeSql("DROP TABLE IF EXISTS pendingplaces;", [], function (tx, res) {
+        console.log("Droped table pendingplaces: " + res);
+
+    });   
+  });
+
+
+
+
+  }
+});
+
+
+  });
+
+ 
+
+  });
+
+
+  }
+        }
+
+
+
+if(Meteor.isCordova){  //////////
+if(navigator.connection.type != Connection.NONE){
+    //var db = sqlitePlugin.openDatabase('userdata.db');
+    var db = dbUserdata;
+
+            db.transaction(function (txn) {
+
+txn.executeSql("SELECT * FROM pendingcomments;", [], function (tx, res) {
+    console.log("Pending comments: " + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+    var array = [];
+    for(var i =0; i<res.rows.length; i++){
+      array.push(res.rows.item(i));
+    }
+
+Meteor.call('insertComments', array, function(error, result){
+  console.log("Callback za insertComments " + result);
+  if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
+    db.transaction(function (txn) {
+    txn.executeSql("DROP TABLE IF EXISTS pendingcomments;", [], function (tx, res) {
+        console.log("Droped table pendingcomments: " + res);
+
+    });   
+  });
+
+
+
+
+  }
+});
+
+
+  });
+
+ 
+
+  });
+
+
+  }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//alert(localStorage.timestamp);
 	//localStorage.timestamp = "2016-09-24T17:24:54.579Z";
 	Session.set('timestamp', localStorage.timestamp);
@@ -174,42 +271,7 @@ Session.set("timestamp", nDate);
 
 
 
-//
-if(Meteor.isCordova){  //////////
-if(navigator.connection.type != Connection.NONE){
-  	//var db = sqlitePlugin.openDatabase('userdata.db');
-  	var db = dbUserdata;
 
-            db.transaction(function (txn) {
-
-txn.executeSql("SELECT * FROM pendingplaces;", [], function (tx, res) {
-    console.log("Pending places: " + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
-Meteor.call('insertPlaces', res.rows._array, function(error, result){
-	console.log("Callback za insertPlaces " + result);
-	if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
-		db.transaction(function (txn) {
-		txn.executeSql("DROP TABLE IF EXISTS pendingplaces;", [], function (tx, res) {
-				console.log("Droped table pendingplaces: " + res);
-
-		});		
-	});
-
-
-
-
-	}
-});
-
-
-  });
-
- 
-
-	});
-
-
-	}
-        }
 
 
 
@@ -335,41 +397,7 @@ this.autorun(function() {
 
 
 
-if(Meteor.isCordova){  //////////
-if(navigator.connection.type != Connection.NONE){
-    //var db = sqlitePlugin.openDatabase('userdata.db');
-    var db = dbUserdata;
 
-            db.transaction(function (txn) {
-
-txn.executeSql("SELECT * FROM pendingcomments;", [], function (tx, res) {
-    console.log("Pending comments: " + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
-Meteor.call('insertComments', res.rows._array, function(error, result){
-  console.log("Callback za insertComments " + result);
-  if(result == true){//ako je oke ubaceno u bazu, brizemo iz sqlite
-    db.transaction(function (txn) {
-    txn.executeSql("DROP TABLE IF EXISTS pendingcomments;", [], function (tx, res) {
-        console.log("Droped table pendingcomments: " + res);
-
-    });   
-  });
-
-
-
-
-  }
-});
-
-
-  });
-
- 
-
-  });
-
-
-  }
-        }
 
 
 

@@ -6,7 +6,7 @@ FlowRouter.route('/', {
 
 //var db = sqlitePlugin.openDatabase('userdata.db');
 if(dbUserdata==null){
-	dbUserdata = sqlitePlugin.openDatabase('userdata.db');
+	dbUserdata = sqlitePlugin.openDatabase({name: 'userdata.db', location: 'default'});
 }
 var db = dbUserdata;
 
@@ -15,7 +15,7 @@ if(db){
 
 
   txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
-    console.log("Userdata: " + JSON.stringify(res.rows)); // {"answer": 42} 
+    console.log("Userdata: " + JSON.stringify(res.rows.length)); // {"answer": 42} 
 
     if(res.rows.length > 0){//ako smo se prethodno ulogovali postojace db
     	var userdata = new Object();
@@ -73,7 +73,11 @@ FlowRouter.route('/register', {
 FlowRouter.route('/addnew', {
 	name: 'addnew',
 	action(){
+		if(!navigator.onLine && Session.get('open-map')==undefined){
+			FlowRouter.go('downloadedmaps')
+		}else{
 		BlazeLayout.render('MainLayout', {main: 'AddNewLayout'});
+	}
 	}
 });
 
@@ -95,7 +99,13 @@ FlowRouter.route('/placedetails/:id', {
 FlowRouter.route('/home', {
 	name: 'home',
 	action(){
+		if(!navigator.onLine && Session.get('open-map')==undefined){
+			FlowRouter.go('downloadedmaps');
+		
+	}
+	else{
 		BlazeLayout.render('MainLayout', {main: 'HomeLayout'});
+	}
 	}
 });
 

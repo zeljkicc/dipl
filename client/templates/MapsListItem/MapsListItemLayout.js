@@ -52,13 +52,14 @@ Template.MapsListItemLayout.events({
 var uri = encodeURI("http://192.168.1.100/" + instance.city.toLowerCase() + ".db");
 
 var destinationDirectory = null;
+cordova.file.applicationStorageDirectory + "databases/"
 
- window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destinationDirectory) {
+ window.resolveLocalFileSystemURL(cordova.file.applicationStorageDirectory, function(destinationDirectory) {
         console.log("got main dir",destinationDirectory);
 
         fileTransfer.download(
     uri,
-    destinationDirectory.nativeURL + instance.city.toLowerCase() + ".db",
+    destinationDirectory.nativeURL + "databases/" + instance.city.toLowerCase() + ".db",
     function(entry) {
         console.log("download complete: " + entry.toURL());
         cordova.plugin.pDialog.setMessage("Download complete");
@@ -84,6 +85,9 @@ db.transaction(function (txn) {
 });
 ///////////////////////////////end dodavanje u mapdata
 
+
+
+/////////////pokusaj otvaranja skinute baze
 
     },
     function(error) {
