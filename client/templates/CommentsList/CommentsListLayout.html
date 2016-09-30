@@ -1,13 +1,13 @@
 <template name="CommentsListLayout">
 
 		<ul class="comments-list mdl-list">
-		{{#if Template.subscriptionsReady}}
+	<!--	{{#if Template.subscriptionsReady}} -->
 			{{#each comments}}
 				{{> CommentsListItemLayout}}
 			{{/each}}
-		{{else}}
+<!--		{{else}}
 			{{> spinner}}
-		{{/if}}	
+		{{/if}}	 -->
 		</ul>
 	
 </template>

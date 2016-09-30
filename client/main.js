@@ -11,34 +11,13 @@ import './main.html';
 /////////kada se startuje uredjaj, za inicijalizaciju koja zavisi od cordove
 var db = null;
 
-dbUserdata = null;
+dbUserdata = null; 
 dbMapdata = null;
 
  
 document.addEventListener('deviceready', function() {
 
-//za geolokaciju - cordovin geo plugin
-var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
-                                                  geolocationError,
-                                                  { timeout: 30000, enableHighAccuracy: true
-                                                   });
 
-    // onSuccess Callback 
-    //   This method accepts a `Position` object, which contains 
-    //   the current GPS coordinates 
-    // 
-    function geolocationSuccess(position) {
-      //  var element = document.getElementById('geolocation');
-        console.log( 'Latitude: '  + position.coords.latitude +
-                            ' Longitude: ' + position.coords.longitude);
-    }
- 
-    // onError Callback receives a PositionError object 
-    // 
-    function geolocationError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
 
 
 
@@ -267,6 +246,11 @@ function onOnline() {
     console.log("Went online :)");
 
 
+//da li je dobro mesto
+    Session.set('open-map', undefined);
+   delete Session.keys.open-map;
+
+
 //za pending review-e
     if(Meteor.isCordova){
 if(navigator.connection.type != Connection.NONE){
@@ -466,6 +450,12 @@ var layerInstance = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 }).addTo(map); 
 
+map.locate({setView: true, maxZoom: 16});
+
+ map.on('locationfound', onLocationFound);
+ 
+ map.on('locationerror', onLocationError);
+
 
 }
 else if(Meteor.isCordova){//ako je Cordova cita iz baze (za sada, trebalo bi ako je offline i izabere mapu)
@@ -476,7 +466,7 @@ var db1 = sqlitePlugin.openDatabase({name: city + '.db', location: 'default', an
 //var db1 = sqlitePlugin.openDatabase({name: "krusevac" + '.db', location: 'default', createFromLocation: 1, androidDatabaseImplementation: 2});
 console.log("Otvaranje offline mape (baze): " + city);
 
-db1.readTransaction(function (txn) {
+/*db1.transaction(function (txn) {
         txn.executeSql('SELECT bounds FROM metadata', [], function (tx, res) {
           var bounds = res.rows.item(0).split(",");
 
@@ -484,9 +474,32 @@ db1.readTransaction(function (txn) {
     northEast = L.latLng(bounds[3], bounds[2]);
     bounds1 = L.latLngBounds(southWest, northEast); 
 
+    map.setMaxBounds(bounds1);
+
     console.log("Citanje iz offline mape (baze): " + JSON.stringify(res.rows));
         });
+      }); */
+
+db1.transaction(function(txn) {//vraca granice offline mape (4 tacke u obliku stringa
+                              //izmedju kojih su zarezi)
+      txn.executeSql("select value from metadata where name = 'bounds';", 
+        [], 
+        function (tx, res) {
+  
+     var bounds = res.rows.item(0).value.split(",");
+
+          var southWest = L.latLng(bounds[1], bounds[0]),
+    northEast = L.latLng(bounds[3], bounds[2]);
+    bounds1 = L.latLngBounds(southWest, northEast); 
+
+    map.setMaxBounds(bounds1);
+
+    console.log("Citanje iz offline mape (baze): " + JSON.stringify(res.rows));
+      },
+      function(error){
+        console.log(error);
       });
+    }); 
 
 map = L.map('map', {
     minZoom:14, //da se ubaci metadata u baza za minZoom
@@ -499,7 +512,7 @@ map = L.map('map', {
  var layerInstance = new L.TileLayer.MBTiles('', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 
-         bounds : bounds1,
+        // bounds : bounds1,
          minZoom : 14, //da se ubaci metadata u baza za minZoom
        maxZoom : 18,
                 
@@ -602,8 +615,86 @@ layerInstance.on('load', function (event) {
 map.invalidateSize();
 
 if(navigator.onLine){
-map.locate({setView: true, maxZoom: 16});
+//map.locate({setView: true, maxZoom: 16});
 }
+
+
+//za geolokaciju - cordovin geo plugin
+var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
+                                                  geolocationError,
+                                                  { timeout: 30000, enableHighAccuracy: true
+                                                   });
+ Session.set("watchId", watchId);
+
+    // onSuccess Callback 
+    //   This method accepts a `Position` object, which contains 
+    //   the current GPS coordinates 
+    // 
+    function geolocationSuccess(position) {
+      //  var element = document.getElementById('geolocation');
+        console.log( 'Latitude: '  + position.coords.latitude +
+                            ' Longitude: ' + position.coords.longitude);
+if(map){
+if(Session.get('viewSet')!= true){
+if(navigator.onLine && Session.get('open-map')){
+  //map.setView([position.coords.latitude, position.coords.longitude], 16);
+    
+
+    dbMapdata.transaction(function (txn) {
+
+  txn.executeSql("SELECT * FROM data WHERE city = ?;", [Session.get("open-map")], function (tx, res) {
+    console.log("Mapdata helper: " + JSON.stringify(res.rows.length)); // {"answer": 42}
+
+map.setView(new L.LatLng(res.rows.item(0).lat, res.rows.item(0).lng), 16);
+
+console.log("Postavljen view mape lat:" + res.rows.item(0).lat + ", lng: " + res.rows.item(0).lng);
+    //return  res.rows._array;
+
+    Session.set('viewSet', true);
+
+  }); 
+
+
+});
+
+}
+else if(navigator.onLine){
+    map.setView([position.coords.latitude, position.coords.longitude], 16);
+    Session.set('viewSet', true);
+  }
+}
+         if(myMarker)
+      map.removeLayer(myMarker);
+
+
+    myMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+        .bindPopup("Your location");
+
+//proveriti
+        if(FlowRouter.getRouteName() == "addnew"){
+          myMarker.dragging.enable();
+        }
+
+    //myCircle = L.circle(e.latlng, radius).addTo(map);
+
+     //L.circle(e.latlng, 1*1000).addTo(map); //radius krug
+
+   
+    Session.set("location", [position.coords.latitude, position.coords.longitude]);
+      }
+    }
+ 
+    // onError Callback receives a PositionError object 
+    // 
+    function geolocationError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+
+
+
+
+
 
 /*L.marker([51.5, -0.09]).addTo(map)
     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
@@ -611,9 +702,9 @@ map.locate({setView: true, maxZoom: 16});
 
 
 
- map.on('locationfound', onLocationFound);
+ //map.on('locationfound', onLocationFound);
  
- map.on('locationerror', onLocationError);
+ //map.on('locationerror', onLocationError);
 
 if(FlowRouter.getRouteName() == "addnew"){
    map.on('click', function(e){
@@ -697,11 +788,12 @@ else if(Meteor.isCordova){
             db.transaction(function (txn) {
 
 txn.executeSql("SELECT * FROM offlineplaces WHERE city = ?;", [Session.get('open-map')], function (tx, res) {
-    console.log("Offline places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows._array) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+    console.log("Offline places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
 
 var array = [];
 for(var i = 0; i< res.rows.length; i++){
   array.push(res.rows.item(i));
+  OfflinePlaces.insert(res.rows.item(i));
 }
       setMarkersSQLite(array);
 
@@ -791,3 +883,11 @@ var PlaceIcon = L.Icon.extend({
 
 var hotelIcon = new PlaceIcon({iconUrl: 'images/hotel_0star.png'}),
     restaurantIcon = new PlaceIcon({iconUrl: 'images/restaurant.png'});
+
+    Template.MapLayout.onDestroyed(function(){
+        navigator.geolocation.clearWatch(Session.get("watchID"));
+        Session.set('viewSet', false);
+
+      //  Session.set('open-map', undefined);
+      //  delete Session.keys.open-map;
+    });

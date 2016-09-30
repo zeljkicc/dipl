@@ -1,7 +1,14 @@
 Template.PlaceDetailsLayout.helpers({
   'place': function(){
     var id = FlowRouter.getParam('id');
-    return Places.findOne({_id: id});
+    //return Places.findOne({_id: id});
+
+    	if(!navigator.onLine && Session.get('open-map')){
+        return OfflinePlaces.findOne({_id: id});
+    }
+    else{
+		return Places.findOne({_id: id});
+    }
   }
 });
 
