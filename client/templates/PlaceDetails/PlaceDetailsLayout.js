@@ -4,10 +4,10 @@ Template.PlaceDetailsLayout.helpers({
     //return Places.findOne({_id: id});
 
     	if(!navigator.onLine && Session.get('open-map')){
-        return OfflinePlaces.findOne({_id: id});
+        return OfflinePlaces.findOne({_id: id});//_id iz SQLite dodeljuje se novi prilikom uzimanja iz baze
     }
     else{
-		return Places.findOne({_id: id});
+		return Places.findOne({_id: id});//_id - Mongov id
     }
   }
 });

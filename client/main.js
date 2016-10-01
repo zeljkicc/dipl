@@ -791,9 +791,10 @@ txn.executeSql("SELECT * FROM offlineplaces WHERE city = ?;", [Session.get('open
     console.log("Offline places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
 
 var array = [];
+OfflinePlaces.remove({});
 for(var i = 0; i< res.rows.length; i++){
   array.push(res.rows.item(i));
-  OfflinePlaces.insert(res.rows.item(i));
+ OfflinePlaces.insert(res.rows.item(i));
 }
       setMarkersSQLite(array);
 
