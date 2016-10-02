@@ -1,6 +1,9 @@
 <template name="RegisterLayout">
+<div class="mdl-layout mdl-js-layout my-register-page">
 	<main>
-	<h1 class="login-title">Welcome to TripPlanner!</h1>
+	
+
+	<h2 class="register-title">Register</h2>
 
 
 	<form>
@@ -9,39 +12,39 @@
 
 		<div class="mdl-cell mdl-cell--12-col">
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
-		    	<input class="mdl-textfield__input js-username" type="text" id="username" name="username">
-		    	<label class="mdl-textfield__label" for="username">Username</label>
+		    	<input class="mdl-textfield__input js-username input-login" type="text" id="username" name="username">
+		    	<label class="mdl-textfield__label label-login" for="username">Username</label>
 		  	</div>
 		</div>
 
 
 		<div class="mdl-cell mdl-cell--12-col">
 		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		    	<input class="mdl-textfield__input js-password" type="password" id="password" name="password">
-		    	<label class="mdl-textfield__label" for="password">Password</label>
+		    	<input class="mdl-textfield__input js-password input-login" type="password" id="password" name="password">
+		    	<label class="mdl-textfield__label label-login" for="password">Password</label>
 		  	</div>
 		</div>
 
 		<div class="mdl-cell mdl-cell--12-col">
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		    	<input class="mdl-textfield__input js-firstname" type="text" id="firstname" name="firstname">
-		    	<label class="mdl-textfield__label" for="firstname">First name</label>
+		    	<input class="mdl-textfield__input js-firstname input-login" type="text" id="firstname" name="firstname">
+		    	<label class="mdl-textfield__label label-login" for="firstname">First name</label>
 		  	</div>
 		</div>
 
 
 		<div class="mdl-cell mdl-cell--12-col">
 		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		    	<input class="mdl-textfield__input js-lastname" type="text" id="lastname" name="lastname">
-		    	<label class="mdl-textfield__label" for="lastname">Last name</label>
+		    	<input class="mdl-textfield__input js-lastname input-login" type="text" id="lastname" name="lastname">
+		    	<label class="mdl-textfield__label label-login" for="lastname">Last name</label>
 		  	</div>
 		</div>
 
 		<div class="mdl-cell mdl-cell--12-col">
 		  	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		    	<input class="mdl-textfield__input js-telephone" type="tel" pattern="-?[0-9]*(\.[0-9]+)?" id="telephone" name="telephone">
-		    	<label class="mdl-textfield__label" for="telephone">Telephone</label>
-		    	<span class="mdl-textfield__error">Phone number requered!</span>
+		    	<input class="mdl-textfield__input js-telephone input-login" type="tel" pattern="-?[0-9]*(\.[0-9]+)?" id="telephone" name="telephone">
+		    	<label class="mdl-textfield__label label-login" for="telephone">Telephone</label>
+		    	<span class="mdl-textfield__error">Phone number required!</span>
 		  	</div>
 		</div>
 
@@ -63,4 +66,5 @@
 
 		
 	</main>	
+	</div>
 </template>

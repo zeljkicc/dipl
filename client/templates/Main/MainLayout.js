@@ -117,6 +117,7 @@ Meteor.call('insertComments', array, function(error, result){
 	//reaktivnog izvora unutar to izracunavanja (u ovom slucaju sesije)
 //dodajemo u SQLite sve objekte koji su dodati dok smo bili offline
 		var new_places = null;
+      this.autorun(function() {
   template.subscribe('new-places', Session.get('timestamp'), function(){
 		new_places = Places.find({timestamp:{$gt: new Date(localStorage.timestamp)}}).fetch();
 
@@ -173,15 +174,22 @@ for(var i=0; i < new_places.length; i++){
 
 	
         }
-
+if(new_places.length > 0){
 var nDate = new Date();
 localStorage.timestamp = nDate;
 Session.set("timestamp", nDate);
-
+}
 
 
 
   });
+
+});
+
+
+
+
+
 
 //subscribe za komentare////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,8 +286,11 @@ Session.set("timestamp", nDate);
 
 //za review-e/////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
 Session.set('timestamp-comments', localStorage.timestamp_comments);
     var new_comments = null;
+
+    this.autorun(function() {
 template.subscribe('new-comments', Session.get('timestamp-comments'), function(){
     new_comments = Comments.find({date:{$gt: new Date(localStorage.timestamp_comments)}}).fetch();
 
@@ -337,14 +348,18 @@ for(var i=0; i < new_comments.length; i++){
   
         }
 
+if(new_comments.length > 0){
 var nDate = new Date();
 localStorage.timestamp_comments = nDate;
 Session.set("timestamp-comments", nDate);
+}
 
 
 
 
   });
+
+});//kraj za autorun
 
 
 //za svaki novi komentar observe

@@ -163,7 +163,81 @@ main{
 	font-family: "Helvetica","Arial",sans-serif;
 	padding: 4px 0;
 	color:rgba(0,0,0,.8);
+	background-color: #fff;
 }
 .js-type-select:focus{
 	outline:none;
+}
+
+
+
+.img-circle{
+	border-radius: 50%;
+
+	margin-right:20px;
+	margin-left:20px;
+}
+
+.place-item{
+	text-align:center;
+
+} 
+
+.no-padding-left{
+	padding-left: 0px;
+}
+
+.list-place-item{
+margin:0px;
+} 
+
+
+
+
+.my-login-page{
+	background-image: url(/images/login-background.png);
+
+}
+
+.label-login{
+	color:rgba(0,0,0,.70);
+}
+
+.input-login{
+	border-bottom: 1px solid rgba(0,0,0,.50);
+}
+
+.login-title{
+
+}
+
+
+.my-register-page{
+	background-image: url(/images/register-background.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.register-title{
+	margin-top:48px;
+	margin-bottom:0px;
+}
+
+.background-white{
+	background-color: white;
+}
+
+
+.mdl-list{
+	width:400px;
+	margin-top:0px;
+	padding-top:0px;
+}
+
+.mdl-list__item-avatar{
+	background-color: white;
+}
+
+.mdl-list__item{
+	height:inherit;
 }

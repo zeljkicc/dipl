@@ -12,7 +12,7 @@ Meteor.startup(() => {
 Places._ensureIndex({ "loc" : "2dsphere" });
 
 console.log(Places.find({ loc: { $geoWithin: { $centerSphere: [ [ 21.338348, 43.577473 ] ,
-                                                     0.5 / 6378.15214 ] } } }).fetch());//500 m
+                                                     5 / 6378.15214 ] } } }).fetch());//500 m
 
 
 

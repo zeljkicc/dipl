@@ -1,25 +1,58 @@
 <template name="PlaceLayout">
-<a href="/placedetails/{{_id}}" class="link-no-decoration">
-	<div  class="demo-card-wide mdl-card mdl-shadow--2dp js-placeinlist" data-id={{_id}}>
+
+<!--	<div  class="demo-card-wide mdl-card mdl-shadow-/-2dp js-placeinlist" data-id={{_id}}>
 	  <div class="mdl-card__title">
 	    
-	  <!--  <h6>{{num_reviews _id}} of reviews</h6>
+	  <!-/-  <h6>{{num_reviews _id}} of reviews</h6>
 	    <h6>Average rating{{rating _id}}</h6> -->
-	  </div>
-	<!--  <div class="mdl-card__supporting-text">
+	<!--  </div>
+	<!-/-  <div class="mdl-card__supporting-text">
 	    {{description}}}
 	  </div> -->
-	   <div class="mdl-card__actions mdl-card-border">
+	 <!--  <div class="mdl-card__actions mdl-card-border">
 	    <a class="mdl-button mdl-button-colored mdl-js-button mdl-js-ripple-effect">
 	     	{{name}}
 	    </a>
 	  </div> 
 	  <div class="mdl-card__menu">
-	    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+	    <button class="mdl-button mdl-button-/-icon mdl-js-button mdl-js-ripple-effect">
 	      <i class="material-icons">share</i>
 	    </button>
 	  </div>
-	</div>
+	</div> -->
 
-</a>
+
+	 <li class="mdl-list__item mdl-list__item--three-line no-padding-left list-item-comment list-place-item text-blue background-white">
+
+    <span class="mdl-list__item-primary-content place-item">
+     <i class="mdl-list__item-avatar"><img class="img-circle" src="{{icon type}}"></i>
+      <span><b>{{name}}</b></span>
+      <span class="mdl-list__item-text-body">
+        <i>{{shorter description}}</i>
+      </span> 
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#">{{rating _id}}<i class="material-icons">star</i></a>
+    </span>
+
+  </li> 
+
+
+ <!-- <li class="mdl-list__item mdl-list__item-/-three-line no-padding-left list-item-comment list-place-item text-blue background-white">
+    <span class="mdl-list__item-primary-content place-item">
+      <i class="mdl-list__item-avatar"><img class="img-circle" src="{{icon type}}"></i>
+      <span><b>{{name}}</b></span>
+      <span class="mdl-list__item-text-body">
+         <i>{{shorter description}}</i>
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#">{{rating _id}}<i class="material-icons">star</i></a>
+    </span>
+  </li>--> 
+
+
+
+
+
 </template>

@@ -1,5 +1,6 @@
 <template name="PlacesListLayout">
 
+<div class="mdl-layout mdl-js-layout my-register-page">
 
 <div class="mdl-layout mdl-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
@@ -48,11 +49,13 @@
 	<div class="mdl-grid">
 
  <!-- {{#if Template.subscriptionsReady}} -->
+ <ul class="mdl-list">
 		{{#each places}}
 			<div class="mdl-cell mdl-cell--12-col">
 				{{> PlaceLayout}}
 			</div>
 		{{/each}}
+  </ul>
 <!--  {{else}}
     {{> spinner}} 
   {{/if}} -->
@@ -61,6 +64,8 @@
 
 
 </main>
+
+</div>
 
 </div>
 	

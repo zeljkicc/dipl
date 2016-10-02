@@ -1,8 +1,12 @@
 Template.PlacesListLayout.onCreated(function(){
 
 
-      this.subscribe('near-places', [Session.get('location'), Session.get('radius')]);
+      //razmotriti za buduce opcije :)
+      //this.subscribe('near-places', [Session.get('location'), Session.get('radius')]);
 
+this.subscribe('places-within-box', Session.get("map-bounds"), function(){
+
+  });
 
 
 

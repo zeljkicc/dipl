@@ -19,5 +19,24 @@ Template.PlaceLayout.helpers({
       Meteor.call('avg_rating', id, function(error, result){       
           return result;
       });
+  },
+  shorter: function(description){
+    if(description.length > 50){
+      return '"' + description.substring(0, 50) + '..."';
+    }
+    else{
+      return '"' +  description + '"';
+    }
+  },
+  icon: function(type){
+    switch(type){
+      case 'hotel':
+        return '/images/hotel_0star.png'
+      break;
+      case 'restaurant':
+        return '/images/restaurant.png'
+      break;
+
+    }
   }
 });
