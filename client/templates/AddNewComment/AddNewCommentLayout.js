@@ -53,7 +53,7 @@ Template.AddNewCommentLayout.events({
 
 //for(var i=0; i < new_places.length; i++){
   txn.executeSql("INSERT INTO pendingcomments VALUES (?, ?, ?, ?, ?, ?, ?);", [ title, content, grade, place.mid, author, user_id, date_string], function (tx, res) {
-    console.log("Inserted values in SQLite for comment " + title + " " + content + " " + grade + " " + place.mid); // {"answer": 42} 
+    console.log("Inserted values in SQLite (pendingcomments) for comment " + title + " " + content + " " + grade + " " + place.mid); // {"answer": 42} 
 
       var comment = new Object();
   comment.title = title;
@@ -82,7 +82,7 @@ Template.AddNewCommentLayout.events({
 
       }//end isCordova
       else{
- Meteor.call("insertComment", [title, content, grade, place_id, date, author, user_id]);
+ Meteor.call("insertComment", [title, content, grade, place_id, author, user_id]);
 }
   },
   'click .js-my-back-arrow': function(){

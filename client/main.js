@@ -343,7 +343,7 @@ Meteor.call('insertComments', array, function(error, result){
 
 
 
-
+Session.set('timestamp', Session.get('timestamp'));
 
 
 
@@ -456,6 +456,25 @@ map.locate({setView: true, maxZoom: 16});
  
  map.on('locationerror', onLocationError);
 
+ if(FlowRouter.getRouteName() == "addnew"){
+   map.on('click', function(e){
+    if(newPlaceMarker!=undefined){
+      map.removeLayer(newPlaceMarker);
+       }
+       if(myMarker)
+      map.removeLayer(myMarker);
+    if(myCircle)
+      map.removeLayer(myCircle);
+
+   
+      newPlaceMarker = new L.marker(e.latlng).addTo(map);
+
+var latlng = e.latlng;
+      Session.set("newPlaceMarkerLat", latlng.lat);
+      Session.set("newPlaceMarkerLng", latlng.lng);
+    });
+ }
+
 
 }
 else if(Meteor.isCordova){//ako je Cordova cita iz baze (za sada, trebalo bi ako je offline i izabere mapu)
@@ -520,6 +539,25 @@ map = L.map('map', {
 
 
  map.addLayer(layerInstance); 
+
+ if(FlowRouter.getRouteName() == "addnew"){
+   map.on('click', function(e){
+    if(newPlaceMarker!=undefined){
+      map.removeLayer(newPlaceMarker);
+       }
+       if(myMarker)
+      map.removeLayer(myMarker);
+    if(myCircle)
+      map.removeLayer(myCircle);
+
+   
+      newPlaceMarker = new L.marker(e.latlng).addTo(map);
+
+var latlng = e.latlng;
+      Session.set("newPlaceMarkerLat", latlng.lat);
+      Session.set("newPlaceMarkerLng", latlng.lng);
+    });
+ }
 
 //centar Nisa
  //map.setView(new L.LatLng(43.320857, 21.895122), 16);
@@ -619,12 +657,14 @@ if(navigator.onLine){
 }
 
 
+if(Meteor.isCordova){
 //za geolokaciju - cordovin geo plugin
 var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
                                                   geolocationError,
                                                   { timeout: 30000, enableHighAccuracy: true
                                                    });
  Session.set("watchId", watchId);
+}
 
     // onSuccess Callback 
     //   This method accepts a `Position` object, which contains 
@@ -706,24 +746,7 @@ else if(navigator.onLine){
  
  //map.on('locationerror', onLocationError);
 
-if(FlowRouter.getRouteName() == "addnew"){
-   map.on('click', function(e){
-    if(newPlaceMarker!=undefined){
-      map.removeLayer(newPlaceMarker);
-       }
-       if(myMarker)
-      map.removeLayer(myMarker);
-    if(myCircle)
-      map.removeLayer(myCircle);
 
-   
-      newPlaceMarker = new L.marker(e.latlng).addTo(map);
-
-var latlng = e.latlng;
-      Session.set("newPlaceMarkerLat", latlng.lat);
-      Session.set("newPlaceMarkerLng", latlng.lng);
-    });
- }
 
 
 
@@ -794,6 +817,8 @@ var array = [];
 OfflinePlaces.remove({});
 for(var i = 0; i< res.rows.length; i++){
   array.push(res.rows.item(i));
+ // array[i]._id = res.rows.item(i)._id;
+
  OfflinePlaces.insert(res.rows.item(i));
 }
       setMarkersSQLite(array);
@@ -822,13 +847,14 @@ if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
     }
 
     for (i = 0; i < places.length; i++) { //da se ubaci switch case??
+
   if(places[i].type == "hotel"){
     layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).on('click', onClickMarker));
     
     
   }
   else if(places[i].type == "restaurant"){
-    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon}).on('click', onClickMarker));
+    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon, id: places[i]._id}).on('click', onClickMarker));
   }
   else{
     layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse()).on('click', onClickMarker));
@@ -851,13 +877,14 @@ if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
     for (i = 0; i < places.length; i++) { //da se ubaci switch case??
       var place = places[i]
+      var place_id = OfflinePlaces.findOne({mid: place.mid})._id;
   if(place.type == "hotel"){
-    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: hotelIcon, id: place.mid}).on('click', onClickMarker));
+    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: hotelIcon, id: place_id}).on('click', onClickMarker));
     
     
   }
   else if(place.type == "restaurant"){
-    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: restaurantIcon, id: place.mid}).on('click', onClickMarker));
+    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: restaurantIcon, id: place_id}).on('click', onClickMarker));
   }
   else{
     layerGroupMarkers.addLayer(L.marker([place.lat, place.lng]).on('click', onClickMarker));

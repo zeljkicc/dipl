@@ -8,9 +8,21 @@ this.subscribe('places-within-box', Session.get("map-bounds"), function(){
 
   });
 
+  
+  
+
 
 
   });
+
+
+Template.PlacesListLayout.onRendered(function(){
+
+  $('.js-my-back-arrow').on('click', function(){
+       FlowRouter.go("home");
+     });
+
+});
 
 
 Template.PlacesListLayout.helpers({
@@ -27,7 +39,7 @@ Template.PlacesListLayout.helpers({
 });
 
 Template.PlacesListLayout.events({
-  'click .js-my-back-arrow': function(){
+ /* 'click .js-my-back-arrow': function(){
     FlowRouter.go("home");
-  }
+  } */
 });

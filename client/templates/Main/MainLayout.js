@@ -118,7 +118,7 @@ Meteor.call('insertComments', array, function(error, result){
 //dodajemo u SQLite sve objekte koji su dodati dok smo bili offline
 		var new_places = null;
       this.autorun(function() {
-  template.subscribe('new-places', Session.get('timestamp'), function(){
+  template.subscribe('new-places', new Date(Session.get('timestamp')), function(){
 		new_places = Places.find({timestamp:{$gt: new Date(localStorage.timestamp)}}).fetch();
 
 
@@ -227,7 +227,7 @@ Session.set("timestamp", nDate);
 
 //osluskujemo na dalje da li dok smo online se doda novi objekat
   this.autorun(function() {
-     Places.find({timestamp:{$gt: Session.get('timestamp')}}).observe({
+     Places.find({timestamp:{$gt: new Date(Session.get('timestamp'))}}).observe({
      	added: function(object) {
        // This code runs when a new object "object" was added to collection.
     
@@ -291,7 +291,7 @@ Session.set('timestamp-comments', localStorage.timestamp_comments);
     var new_comments = null;
 
     this.autorun(function() {
-template.subscribe('new-comments', Session.get('timestamp-comments'), function(){
+template.subscribe('new-comments', new Date(Session.get('timestamp-comments')), function(){
     new_comments = Comments.find({date:{$gt: new Date(localStorage.timestamp_comments)}}).fetch();
 
 
@@ -364,7 +364,7 @@ Session.set("timestamp-comments", nDate);
 
 //za svaki novi komentar observe
 this.autorun(function() {
-     Comments.find({date:{$gt: Session.get('timestamp-comments')}}).observe({
+     Comments.find({date:{$gt: new Date(Session.get('timestamp-comments'))}}).observe({
       added: function(object) {
        // This code runs when a new object "object" was added to collection.
     

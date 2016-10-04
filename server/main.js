@@ -38,6 +38,31 @@ Meteor.methods({
 
      return user;
     },
+  register: function(data){
+    var user = null;
+    user = Users.findOne({username:data[0], password:data[1]});
+    if(user == null){
+
+            var tmp = null;
+             tmp = Users.insert({
+            'username': data[0],
+            'password': data[1],
+            'firstname': data[2],
+            'lastname': data[3],
+            'telephone': data[4]
+          }); 
+
+            if(tmp != null){
+              return true;
+            }
+            else{
+              return false;
+            }
+          }
+          else{
+            return false;
+          }
+  },
 
     insertPlace: function(data){
 

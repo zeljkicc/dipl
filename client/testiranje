@@ -1,0 +1,38 @@
+1. kad smo online - dodavanje - ok, ne prikazuje na mapi odmah
+                    mapa
+                    lista
+                    login
+                    registracija
+
+
+
+                    Place - dodavanje na phonu
+                    -dodavanje kad smo online - ok
+                    -dodavanje kad smo offline, pa budemo online bez gasenja app - ok
+                    -dodavanje kad smo offline, pa ugasimo, u ukljucimo pa onda odemo online - ok
+                    -dodavanje kad smo offline, pa ugasimo, pa se povezemo na net, pa ukljucimo - ok
+
+                    Place - dodavanje na racunaru
+                    -kada nismo bili u app, pa je ukljucimo - ok :)
+                    -kada smo online u app - ok skoro, ne doda ako se doda dva puta brzo, da li postoji sinhronizaciona razlika u odnosu na server????
+                    -kada smo online u app na phonu, pa odemo offline, tad dodamo na serveru, pa
+                    odemo online u app na phonu - ok
+                     -kada udjemo offline, pa se povezemo online dok smo u app - ok
+
+
+
+
+                    Komentari - dodavanje na phonu
+                    -dodavanje kad smo online  - ok
+                    -dodavanje kad smo offline, pa budemo online bez gasenja app  - ok
+                    -dodavanje kad smo offline, pa ugasimo, u ukljucimo pa onda odemo online - ok
+                    -dodavanje kad smo offline, pa ugasimo, pa se povezemo na net, pa ukljucimo - ok
+
+
+
+                    Komentari - dodavanje na racunaru
+                    -kada nismo bili u app, pa je ukljucimo - ok :)
+                     -kada smo online u app - ok skoro, ne doda ako se doda dva puta brzo, da li postoji sinhronizaciona razlika u odnosu na server????
+                     -kada smo online u app na phonu, pa odemo offline, tad dodamo na serveru, pa
+                    odemo online u app na phonu - ok
+                    -kada udjemo offline, pa se povezemo online dok smo u app - ok
