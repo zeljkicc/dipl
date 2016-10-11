@@ -13,6 +13,66 @@
 Template.MainLayout.onCreated(function(){
 	var template = this;
 
+this.subscribe('sharedplans', Session.get('userdata')._id, function(){
+SharedPlans.find().observe({
+  added:function(object){
+    //alert(JSON.stringify(object));
+
+if(Meteor.isCordova){
+    var date = new Date();
+
+  cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: "New plan",
+      message: "Friend shared a trip plan with you",
+      at: date,
+      data: {plan_id : object.plan_id}
+  });
+
+  cordova.plugins.notification.local.on("click", function (notification) {
+    FlowRouter.go('home');  
+    console.log(object.plan_id) ; 
+});
+
+}
+
+
+
+
+
+  }
+});    
+
+});
+
+if(Meteor.isCordova){
+//smestanje u promenjivu sesije mapa na koje smo pruzeli
+  var db2 = null;
+  if(dbMapdata == null){
+//db2 = sqlitePlugin.openDatabase('mymaps.db');
+db2 = sqlitePlugin.openDatabase({name: 'mymaps.db', location:'default'});
+}
+else{
+db2 = dbMapdata;
+}
+db2.transaction(function (txn) {
+
+  txn.executeSql("SELECT * FROM data;", [], function (tx, res) {
+    console.log("Mapdata helper: " + JSON.stringify(res.rows.length)); // {"answer": 42}
+    var array = [];
+    for(var i =0; i<res.rows.length; i++){
+      array.push(res.rows.item(i));
+    }
+
+Session.set('myMaps', array);
+    //return  res.rows._array;
+  }); 
+
+
+});
+
+}
+
 
   //
 if(Meteor.isCordova){  //////////
@@ -96,7 +156,7 @@ Meteor.call('insertComments', array, function(error, result){
 
 
   }
-        }
+        }  
 
 
 
@@ -118,8 +178,8 @@ Meteor.call('insertComments', array, function(error, result){
 //dodajemo u SQLite sve objekte koji su dodati dok smo bili offline
 		var new_places = null;
       this.autorun(function() {
-  template.subscribe('new-places', new Date(Session.get('timestamp')), function(){
-		new_places = Places.find({timestamp:{$gt: new Date(localStorage.timestamp)}}).fetch();
+  template.subscribe('new-places', [new Date(Session.get('timestamp')), Session.get('myMaps')], function(){
+		new_places = Places.find({timestamp:{$gt: new Date(Session.get('timestamp'))}}).fetch();
 
 
 		/*for(var i=0; i < new_places.length; i++){
@@ -261,7 +321,7 @@ Session.set("timestamp", nDate);
         }
 
 
-     		alert(object);
+     	//	alert(object);
 
      		var date = new Date();
 			localStorage.timestamp = date;
@@ -317,7 +377,7 @@ if(Meteor.isCordova){  //////////
               
 
 
- txn.executeSql('CREATE TABLE IF NOT EXISTS offlinecomments (title TEXT, content TEXT, grade INTEGER, placeid TEXT, date TEXT, author TEXT, userid TEXT, mid TEXT);', [], function (tx, res) {
+ txn.executeSql('CREATE TABLE IF NOT EXISTS offlinecomments (title TEXT, content TEXT, grade INTEGER, placeid TEXT, date TEXT, author TEXT, userid TEXT, mid TEXT, image1 TEXT, image2 TEXT, image3 TEXT);', [], function (tx, res) {
     console.log("Created database offlinecomments if not exist"); // {"answer": 42} 
   });
 
@@ -330,7 +390,7 @@ for(var i=0; i < new_comments.length; i++){
   var comment = new_comments[i];
  // var lat = place.loc.coordinates[0];
  // var lng = place.loc.coordinates[1];
-  txn.executeSql("INSERT INTO offlinecomments VALUES (?, ?, ?, ?, ?, ?, ?, ?);", [ comment.title, comment.content, comment.grade, comment.place_id, comment.date, comment.author, comment.user_id, comment._id ], function (tx, res) {
+  txn.executeSql("INSERT INTO offlinecomments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", [ comment.title, comment.content, comment.grade, comment.place_id, comment.date, comment.author, comment.user_id, comment._id, comment.image1, comment.image2, comment.image3 ], function (tx, res) {
     console.log("Inserted values in SQLite for comment " + comment.title + " " + comment.content + " " + comment.grade  + " " + comment.date); // {"answer": 42} 
   });
   }
@@ -379,12 +439,12 @@ this.autorun(function() {
 
             db.transaction(function (txn) {
 
- txn.executeSql('CREATE TABLE IF NOT EXISTS offlinecomments (title TEXT, content TEXT, grade INTEGER, placeid TEXT, date TEXT, author TEXT, userid TEXT, mid TEXT);', [], function (tx, res) {
+ txn.executeSql('CREATE TABLE IF NOT EXISTS offlinecomments (title TEXT, content TEXT, grade INTEGER, placeid TEXT, date TEXT, author TEXT, userid TEXT, mid TEXT, image1 TEXT, image2 TEXT, image3 TEXT);', [], function (tx, res) {
     console.log("Created database offlinecomments if not exist"); // {"answer": 42} 
   });
 
 //for(var i=0; i < new_places.length; i++){
-  txn.executeSql("INSERT INTO offlinecomments VALUES (?, ?, ?, ?, ?, ?, ?, ?);", [ object.title, object.content, object.grade, object.place_id, object.date, object.author, object.user_id, object._id ], function (tx, res) {
+  txn.executeSql("INSERT INTO offlinecomments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", [ object.title, object.content, object.grade, object.place_id, object.date, object.author, object.user_id, object._id, object.image1, object.image2, object.image3 ], function (tx, res) {
     console.log("Inserted values in SQLite for comment " + object.title + " " + object.content + " " + object.grade  + " " + object.date); // {"answer": 42} 
   });
   //}
@@ -398,7 +458,7 @@ this.autorun(function() {
         }
 
 
-        alert(object);
+      //  alert(object);
 
         var date = new Date();
       localStorage.timestamp = date;

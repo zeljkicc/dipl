@@ -1,0 +1,101 @@
+<template name="SavePlanLayout">
+	
+	
+<div class="mdl-layout mdl-js-layout my-register-page">
+
+<div class="mdl-layout mdl-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row js-my-fixed-header">
+      <!-- Title --><i class="material-icons js-my-back-arrow">arrow_back</i>
+      <span class="mdl-layout-title">Save Plan</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+
+<!--za search-->
+    <!--  <div class="mdl-textfield mdl-js-textfield mdl-textfield-/-expandable
+                  mdl-textfield-/-floating-label mdl-textfield-/-align-right">
+        <label class="mdl-button mdl-js-button mdl-button-/-icon"
+               for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label> -->
+
+        <button id="demo-menu-lower-right"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">more_vert</i>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+           for="demo-menu-lower-right">
+        <li class="mdl-menu__item">Some Action</li>
+        <li class="mdl-menu__item">Another Action</li>
+        <li disabled class="mdl-menu__item">Disabled Action</li>
+        <li class="mdl-menu__item">Yet Another Action</li>
+        </ul>
+
+     <!--   <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="sample"
+                 id="waterfall-exp"> 
+        </div>
+        </div>-->
+
+    </div>
+  </header>
+
+  <main class="mdl-layout__content">
+
+
+
+<div class="page-content">
+
+	<div class="mdl-grid">
+
+	<form action="#">
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <input class="mdl-textfield__input js-planname" type="text" id="planname">
+    <label class="mdl-textfield__label" for="planname">Plan Name</label>
+  </div>
+
+   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <input class="mdl-textfield__input js-plancity" type="text" id="plancity">
+    <label class="mdl-textfield__label" for="planname">City</label>
+  </div>
+
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+	  <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="public" checked>
+	  <span class="mdl-radio__label">Public</span>
+ </label>
+ <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+	  <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="private">
+	  <span class="mdl-radio__label">Private</span>
+ </label>
+
+  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-button-saveplan" style="width:100%; margin-bottom:10px; margin-top:5px">
+  Save Plan
+</button>
+
+</form>
+
+
+
+
+
+ <!-- {{#if Template.subscriptionsReady}} -->
+ <ul class="mdl-list">
+	{{#each places}}
+	  {{> SavePlanPlaceListItemLayout}}
+	{{/each}}
+	 </ul>
+<!--  {{else}}
+    {{> spinner}} 
+  {{/if}} -->
+	</div>
+</div>
+
+
+</main>
+
+</div>
+
+</div>
+
+</template>

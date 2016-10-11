@@ -49,7 +49,8 @@ Template.MapsListItemLayout.events({
 
 //var uri = encodeURI("http://some.server.com/download.php");
 //var uri = encodeURI("http://www.akademija.uns.ac.rs/wp-content/uploads/2012/03/slika2011.jpg");//map.uri
-var uri = encodeURI("http://192.168.1.100/" + instance.city.toLowerCase() + ".db");
+var uri = encodeURI("http://192.168.1.102/" + instance.city.toLowerCase() + ".db");
+
 
 var destinationDirectory = null;
 cordova.file.applicationStorageDirectory + "databases/"
@@ -75,6 +76,80 @@ db.transaction(function (txn) {
 
     txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?);", [instance.city, instance.state, parseFloat(instance.size), instance.center.lat, instance.center.lng], function (tx, res) {
     console.log("Inserted values for new map Downloaded AAAA"); // {"answer": 42} ////RADILLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+
+    //preuzimanje objekata za preuzetu mapu
+    Meteor.call('downloadPlaces', instance.city, function(error, result){
+        //smestiti u SQLite
+        if(Meteor.isCordova){  //////////
+
+  //var db = sqlitePlugin.openDatabase('userdata.db');
+
+    var db = dbUserdata;
+    if(db==null){
+
+        db = sqlitePlugin.openDatabase('userdata.db');
+        dbUserdata = db;
+    }
+
+    var new_places = result;
+            db.transaction(function (txn) {
+
+
+                
+
+
+ txn.executeSql('CREATE TABLE IF NOT EXISTS offlineplaces (name TEXT, description TEXT, type TEXT, lat TEXT, lng TEXT, userid TEXT, city TEXT, mid TEXT);', [], function (tx, res) {
+    console.log("Created database offlineplaces if not exist"); // {"answer": 42} 
+  });
+
+ txn.executeSql("SELECT * FROM offlineplaces;", [], function (tx, res) {
+    //console.log("Inserted values in SQLite for place " + new_places[i].name + " " + new_places[i].description + " " + new_places[i].loc.coordinates[0]  + " " + new_places[i].city); // {"answer": 42} 
+    console.log("After download map - Procitalo iz baze offlineplaces pre svega\n\n: " + JSON.stringify(res.rows));
+  });
+
+for(var i=0; i < new_places.length; i++){
+    var place = new_places[i];
+    var lat = place.loc.coordinates[0];
+    var lng = place.loc.coordinates[1];
+  txn.executeSql("INSERT INTO offlineplaces VALUES (?, ?, ?, ?, ?, ?, ?, ?);", [ place.name, place.description, place.type, lng, lat, place.user_id, place.city, place._id ], function (tx, res) {
+    console.log("After download map - Inserted values in SQLite for place " + place.name + " " + place.description + " " + lng  + " " + place.city); // {"answer": 42} 
+  });
+  }
+
+   txn.executeSql("SELECT * FROM offlineplaces;", [], function (tx, res) {
+    //console.log("Inserted values in SQLite for place " + new_places[i].name + " " + new_places[i].description + " " + new_places[i].loc.coordinates[0]  + " " + new_places[i].city); // {"answer": 42} 
+    console.log("After download map - Procitalo iz baze offlineplaces: " + JSON.stringify(res.rows));
+  });
+
+ 
+
+    });
+
+
+    
+        }
+
+        //postaviti timestamp
+        var nDate = new Date();
+        localStorage.timestamp = nDate;
+        Session.set("timestamp", nDate);
+
+
+        //postaviti da je preuzeta nova mapa
+        var newMap = new Object();
+        newMap.city = instance.city;
+        newMap.state = instance.state;
+        newMap.size = parseFloat(instance.size);
+        newMap.lat = instance.center.lat;
+        newMap.lng = instance.center.lng;
+        var array1 = Session.get('myMaps');
+        array1.push(newMap);
+        Session.set('myMaps', array1);
+
+
+
+    });
+
   }); 
 
 

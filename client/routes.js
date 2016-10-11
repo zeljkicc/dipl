@@ -25,6 +25,7 @@ if(db){
   		userdata.firstname = res.rows.item(0).firstname;
   		userdata.lastname = res.rows.item(0).lastname;
   		userdata.telephone = res.rows.item(0).telephone;
+  		userdata.image = res.rows.item(0).image;
 		Session.set("userdata", userdata);
 
     	FlowRouter.go('home');
@@ -125,3 +126,37 @@ FlowRouter.route('/downloadedmaps', {
 	}
 });
 
+FlowRouter.route('/addnewfriend', {
+	name: 'addnewfriend',
+	action(){
+		BlazeLayout.render('MainLayout', {main: 'AddNewFriendLayout'});
+	}
+});
+
+FlowRouter.route('/saveplan', {
+	name: 'saveplan',
+	action(){
+		BlazeLayout.render('MainLayout', {main: 'SavePlanLayout'});
+	}
+});
+
+FlowRouter.route('/plans', {
+	name: 'plans',
+	action(){
+		BlazeLayout.render('MainLayout', {main: 'PlansListLayout'});
+	}
+});
+
+FlowRouter.route('/plandetails/:id', {
+	name: 'plandetails',
+	action(){
+		BlazeLayout.render('MainLayout', {main: 'PlanDetailsLayout'});
+	}
+});
+
+FlowRouter.route('/friends', {
+	name: 'friends',
+	action(){
+		BlazeLayout.render('MainLayout', {main: 'FriendsListLayout'});
+	}
+});

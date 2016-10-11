@@ -1,0 +1,56 @@
+<template name="AddNewFriendLayout">
+
+	<div class="mdl-layout mdl-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row js-my-fixed-header">
+      <!-- Title --><i class="material-icons js-my-back-arrow">arrow_back</i>
+      <span class="mdl-layout-title">Add new friend</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+
+<!--za search-->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                  mdl-textfield--floating-label mdl-textfield--align-right">
+        <label class="mdl-button mdl-js-button mdl-button--icon"
+               for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="sample"
+                 id="waterfall-exp">
+        </div>
+        </div>
+
+    </div>
+  </header>
+
+    <main class="mdl-layout__content">
+
+
+
+<div class="page-content">
+
+	<form>
+  		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    		<input class="mdl-textfield__input js-addfriend-input" type="text" id="searchusers">
+    	<label class="mdl-textfield__label" for="sample3">Add friend</label>
+  		</div>
+		<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored js-addfriend-button">
+		  <i class="material-icons">person_add</i>
+		</button>
+	</form>
+
+	<h4>My friends</h4>
+
+	 {{> FriendsListLayout}} 
+
+
+		</div>
+
+
+</main>
+
+</div>
+
+</template>

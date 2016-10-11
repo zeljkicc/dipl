@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="mdl-cell mdl-cell--12-col">
-			<div class="mdl-textfield mdl-js-textfield">
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     			 <textarea class="mdl-textfield__input js-content" type="text" rows= "3" id="content" name="content"></textarea>
    				 <label class="mdl-textfield__label" for="content">Review</label>
   			</div>
@@ -28,7 +28,48 @@
 			</button>
 		</div>
 
-	  
+
+	<div class="mdl-cell mdl-cell--12-col">
+		<div id="image1-div" >
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-take-picture-1">
+  				<i class="material-icons">camera</i>
+			</button>
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-choose-picture-1">
+  				<i class="material-icons">image</i>
+			</button>
+			<img id="image1" style="width:98%; border-radius: 10px; padding:1%;">
+		</div>
+		<div id="image2-div" >
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-take-picture-2">
+  				<i class="material-icons">camera</i>
+			</button>
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-choose-picture-2">
+  				<i class="material-icons">image</i>
+			</button>
+			<img id="image2" style="width:98%; border-radius: 10px; padding:1%;">
+		</div>
+		<div id="image3-div" >
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-take-picture-3">
+  				<i class="material-icons">camera</i>
+			</button>
+			<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored js-choose-picture-3">
+  				<i class="material-icons">image</i>
+			</button>
+			<img id="image3" style="width:98%; border-radius: 10px; padding:1%;">
+		</div>
+
+		
+	</div>
+
+	<!--<img id="image1" style="width:33%">-->
+
+	<div id="popup-for-image" style="display:none; margin:auto; padding:3px; border-radius:10px;">
+	<div style="width: 95%; margin:auto">
+		<img id="image-in-popup" style="width: 100%; margin:auto; border-radius:10px">
+		</div>
+	</div>
+		
+		
 
 	
 </template>

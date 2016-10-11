@@ -18,3 +18,25 @@ Template.CommentsListItemLayout.helpers({
   }
 });
 
+Template.CommentsListItemLayout.onRendered(function(){
+
+});
+
+
+
+
+Template.CommentsListItemLayout.events({
+  'click #image1':function(e){
+      alert(e.target.id);
+      $("#image-in-popup").attr('src', $("#image1_").attr("src"));
+      $("#popup-for-image").bPopup();
+  },
+  'click #image2':function(e){
+      $("#image-in-popup").attr('src', $("#image2").attr("src"));
+      $("#popup-for-image").bPopup();
+  },
+  'click #image3':function(e){
+      $("#image-in-popup").attr('src', $("#image3").attr("src"));
+      $("#popup-for-image").bPopup();
+  }
+});

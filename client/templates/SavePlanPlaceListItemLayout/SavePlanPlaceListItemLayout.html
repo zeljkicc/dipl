@@ -1,0 +1,25 @@
+<template name="SavePlanPlaceListItemLayout">
+	 
+	 <li class="mdl-list__item mdl-list__item--three-line no-padding-left list-item-comment list-place-item text-blue background-white">
+  
+
+    <span class="mdl-list__item-primary-content place-item">
+     <i class="mdl-list__item-avatar"><img class="img-circle" src="{{icon type}}"></i>
+      <span><b>{{pos}}. - {{name}}</b></span>
+      <span class="mdl-list__item-text-body">
+        <i>{{shorter description}}</i>
+      </span> 
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+      <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored js-buttom-up">
+  		<i class="material-icons">arrow_drop_up</i>
+		</button>
+      <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored js-buttom-down">
+  		<i class="material-icons">arrow_drop_down</i>
+		</button>
+    </span>
+
+  </li> 
+
+</template>

@@ -4,16 +4,50 @@
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
-      <span class="mdl-layout-title">Tripplanner</span>
+      <span class="mdl-layout-title">TripPlanner</span>
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
       <!-- Navigation. We hide it in small screens. -->
+
+      <label class="mdl-button mdl-js-button mdl-button--icon js-plans"
+               for="fixed-header-drawer-exp">
+          <i class="material-icons mdl-badge mdl-badge--overlap" data-badge="{{shared_plans}}">view_list</i>
+        </label>
+       <label class="mdl-button mdl-js-button mdl-button--icon js-save-plan"
+               for="fixed-header-drawer-exp">
+          <i class="material-icons mdl-badge mdl-badge--overlap" data-badge="{{plan_places}}">save</i>
+        </label>
+
+        <!-- Right aligned menu below button -->
+      <button id="demo-menu-lower-right"
+              class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">more_vert</i>
+      </button>
+
+      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+          for="demo-menu-lower-right">
+        <li class="mdl-menu__item">Some Action</li>
+        <li class="mdl-menu__item">Another Action</li>
+        <li disabled class="mdl-menu__item">Disabled Action</li>
+        <li class="mdl-menu__item">Yet Another Action</li>
+      </ul>
+
+
     </div>
   </header>
   <div class="mdl-layout__drawer">
   <div class="user-title">
-    <h6 class="user-name-title">{{userdata.firstname}} {{userdata.lastname}}</h6>
-    <h6 class="user-username-title">{{userdata.username}}</h6>
+
+        <img id="image" src={{userdata.image}} style="width:71px; border-radius: 50%; height:71px;
+      object-fit: cover; /* Do not scale the image */
+  object-position: center; /* Center the image within the element */
+  margin-bottom:10px; margin-top:10px;
+  background:white; padding:1px">
+
+  <span style="margin-left:20px"><b><h7>TripPlanner</h7></b></span>
+
+    <h6 style="margin-top:0px; margin-bottom:0px">{{userdata.firstname}} {{userdata.lastname}}</h6>
+    <h6 style="margin-top:0px; margin-bottom:0px">{{userdata.username}}</h6>
   </div>
     
     <hr class="margin-top-0px margin-bottom-0px">
@@ -46,9 +80,33 @@
     My Maps
   </span>
   </li></a>
+   <a href="/friends" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">people</i>
+    Friends
+  </span>
+  </li></a>
+  <a href="/addnewfriend" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">person_add</i>
+    Add Friend
+  </span>
+  </li></a>
+   <a href="/addnewfriend" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">show_chart</i>
+    Plans
+  </span>
+  </li></a>
+   <a href="/newplan" class="my-nav-a"> <li class="mdl-list__item">
+    <span class="mdl-list__item-primary-content">
+    <i class="material-icons mdl-list__item-icon">create</i>
+    New Plan
+  </span>
+  </li></a>
+
 </ul>
 
-<hr class="margin-top-0px">
 
 <!--<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect js-radius-switch" for="switch-1">
   <input type="checkbox" id="switch-1" class="mdl-switch__input js-radius-switch-input"  checked={{showRadius}} >
@@ -66,7 +124,7 @@
 
 
 
-<div class="mdl-layout__content height-100">
+<div class="mdl-layout__content height-100" >
 	
 	{{> MapLayout}}
 

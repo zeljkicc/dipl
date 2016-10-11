@@ -36,6 +36,43 @@ Template.PlaceLayout.helpers({
       case 'restaurant':
         return '/images/restaurant.png'
       break;
+        case "amphitheater":
+      return '/images/amphitheater-2.png'
+      break;
+        case "museum":
+      return '/images/art-museum-2.png'
+      break;
+        case "fortress":
+      return '/images/tvrdjava.png'
+      break;
+        case "library":
+      return '/images/book.png'
+      break;
+        case "cinema":
+      return '/images/cinema.png'
+      break;
+        case "fountain":
+      return '/images/fountain-2.png'
+      break;
+        case "gallery":
+      return '/images/museum-paintings.png'
+      break;
+        case "music":
+      return '/images/music_live.png'
+      break;
+        case "planetarium":
+      return '/images/planetarium-2.png'
+      break;
+        case "monument":
+      return '/images/statue-2.png'
+      break;
+        case "church":
+      return '/images/church.png'
+      break;
+        case "theater":
+      return '/images/theater.png'
+      break;   
+
 
     }
   }

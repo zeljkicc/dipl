@@ -7,8 +7,23 @@ Template.HomeLayout.onCreated(function(){
  if(Session.get('showRadius') == undefined){
   Session.set('showRadius', true);
  }
+
+
+
 });
 
+Template.HomeLayout.onRendered(function(){
+   $('.js-save-plan').on('click', function(){
+
+      FlowRouter.go('/saveplan');
+    
+ });
+    $('.js-plans').on('click', function(){
+
+      FlowRouter.go('/plans');
+    
+ });
+});
 
 Template.HomeLayout.helpers({
   userdata: function(){
@@ -19,6 +34,12 @@ Template.HomeLayout.helpers({
   },
   showRadius: function(){
       return Session.get('showRadius');
+  },
+  plan_places: function(){
+      return PlanPlaces.find().count();
+  },
+  shared_plans: function(){
+      return SharedPlans.find().count();
   }
 });
 
@@ -29,4 +50,7 @@ Template.HomeLayout.events({
   'change .js-radius-slider':function(event){
     Session.set('radius', e.target.value);
   }
+
+   
 });
+

@@ -9,7 +9,10 @@ import { Meteor } from 'meteor/meteor';
 import sqlite3 from "sqlite3"*/
 
 Meteor.startup(() => {
-Places._ensureIndex({ "loc" : "2dsphere" });
+   //Places._dropIndex("search_index_loc");
+   // Plans._dropIndex("search_index_plan");
+Places._ensureIndex({ "loc" : "2dsphere" }, {name : "search_index_loc"});
+Plans._ensureIndex( { name: "text" } , {name : "search_index_plan"});
 
 console.log(Places.find({ loc: { $geoWithin: { $centerSphere: [ [ 21.338348, 43.577473 ] ,
                                                      5 / 6378.15214 ] } } }).fetch());//500 m
@@ -49,7 +52,8 @@ Meteor.methods({
             'password': data[1],
             'firstname': data[2],
             'lastname': data[3],
-            'telephone': data[4]
+            'telephone': data[4],
+            'image': data[5]
           }); 
 
             if(tmp != null){
@@ -119,7 +123,10 @@ Meteor.methods({
             'place_id': data[3],
             'date': new Date(),
             'author': data[4],
-            'user_id': data[5]
+            'user_id': data[5],
+            'image1': data[6],
+            'image2': data[7],
+            'image3': data[8]
           });
     },
 
@@ -132,7 +139,10 @@ Meteor.methods({
             'place_id': array[i].placeid,
             'date': new Date(),
             'author': array[i].author,
-            'user_id': array[i].userid
+            'user_id': array[i].userid,
+            'image1': array[i].image1,
+            'image2': array[i].image2,
+            'image3': array[i].image3
           }, function(error, result){
             if(result==null){
               return false;
@@ -195,8 +205,72 @@ Meteor.methods({
        return Comments.remove({
         _id: id
       });
-    }
+    },
+
+    downloadPlaces: function(city){
+      console.log("preuzimanje svih place-ova za downloadovani grad - server");
+
+      return Places.find({city: city}).fetch();
+    },
+
+    downloadComments: function(city){//implementirati na klijentu, da li je dobro ovako?
+      console.log("preuzimanje svih place-ova za downloadovani grad - server");
+
+      return Comments.find({city: city}).fetch();
+    },
+
+    addFriend: function(data){ //data[0] //id usera koji je dodao
+      console.log("dodavanje prijatelja"); //data[1] username korisnika koji je dodan
+        var user = Users.findOne({username: data[1]});
+        Users.update({_id: data[0]}, { $addToSet: {friends: user._id }});
+        Users.update({_id: user._id}, { $addToSet: {friends: data[0] }});
+
+    },
+
+    addPlan: function(data){
+      console.log("dodavanje plana");
+      var places = data[0];
+      var name = data[1];
+      var option = data[2];
+
+      return Plans.insert({
+                    places: places,
+                    name: name,
+                    option: option,
+                    user_id: data[3], 
+                    date_aded: data[4], 
+                    all_waypoints: data[5],
+                    creator_name: data[6],
+                    city: data[7]
+      });
+    },
+    updatePlanOption: function(data){
+      console.log("Update Plan Options "  + JSON.stringify(data));
+      return Plans.update({_id: data[0]}, {$set: {option: data[1]}});
+    },
+    'sharePlan': function(data){//[nas_id, plan, izabrane prijatelje]
+      for(var i =0; i<data[2].length; i++)
+      {
+       SharedPlans.insert({
+          shared_by: data[0],
+          shared_to: data[2][i],
+          plan_id: data[1]
+        });
+      }
+
+    },
+    'removeSharedPlan' : function(data){
+      return SharedPlans.remove({plan_id: data[0], shared_to:data[1]});
+    },
+    'addToSavedPlans' : function(data){
+
+      SharedPlans.remove({plan_id: data[0], shared_to:data[1]});
       
+      return SavedPlans.insert({
+        saved_by : data[1],
+        plan_id : data[0]
+      });
+    }
     
 	
 }); //pucaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!!!!!!!!!!!!!!!!

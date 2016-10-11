@@ -51,7 +51,25 @@ var place = OfflinePlaces.findOne({_id:id});
 
     }
     else{
-		this.subscribe('place-comments', id);
+		this.subscribe('place-comments', id, function(){
+        var comments = Comments.find().fetch();
+  for(var i = 0; i < comments.length; i++){
+
+    $('#image1_' + comments[i]._id).on('click', function(){
+        //alert("Hey");
+        $("#image-in-popup2").attr('src', $("#"+this.id).attr("src"));
+        $("#popup-for-image2").bPopup();
+    });
+    $('#image2_' + comments[i]._id).on('click', function(){
+        $("#image-in-popup2").attr('src', $("#"+this.id).attr("src"));
+        $("#popup-for-image2").bPopup();
+    });
+    $('#image3_' + comments[i]._id).on('click', function(){
+        $("#image-in-popup2").attr('src', $("#"+this.id).attr("src"));
+        $("#popup-for-image2").bPopup();
+    });
+  }
+    });
     }
 
 
@@ -78,3 +96,9 @@ Template.CommentsListLayout.helpers({
 Template.CommentsListLayout.onDestroyed(function(){
 	OfflineComments.remove({});
 });
+
+Template.CommentsListLayout.onRendered(function(){
+
+
+
+  });

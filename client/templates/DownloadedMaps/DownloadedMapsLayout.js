@@ -1,4 +1,7 @@
 Template.DownloadedMapsLayout.onRendered(function(){
+
+//prebaceno u main Template
+  /*
 	var db2 = null;
 	if(dbMapdata == null){
 //db2 = sqlitePlugin.openDatabase('mymaps.db');
@@ -21,7 +24,7 @@ Session.set('myMaps', array);
   }); 
 
 
-});
+}); */
 
 
 

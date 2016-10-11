@@ -1,0 +1,1 @@
+Friendships = new Mongo.Collection('friendships');

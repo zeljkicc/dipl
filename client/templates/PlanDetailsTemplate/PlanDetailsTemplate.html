@@ -1,0 +1,95 @@
+<template name="PlanDetailsLayout">
+	<div class="mdl-layout mdl-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row js-my-fixed-header">
+      <!-- Title --><i class="material-icons js-my-back-arrow">arrow_back</i>
+      <span class="mdl-layout-title">Plan {{plan.name}} details</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+		<label class="mdl-button mdl-js-button mdl-button--icon js-share-plan"
+               for="fixed-header-drawer-exp">
+          <i class="material-icons">share</i>
+        </label>
+
+
+    </div>
+  </header>
+
+    <main class="mdl-layout__content">
+
+<div class="page-content">
+
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+  <div class="mdl-tabs__tab-bar">
+      <a href="#starks-panel" class="mdl-tabs__tab is-active add-new-tab">Plan Map</a>
+      <a href="#lannisters-panel" class="mdl-tabs__tab add-new-tab">Information</a>
+     
+  </div>
+
+  <div class="mdl-tabs__panel is-active" id="starks-panel">
+		{{> MapLayout}}
+  </div>
+  <div class="mdl-tabs__panel" id="lannisters-panel">
+		 <ul class="mdl-list plans-list">
+
+{{#if my plan.user_id}}
+
+{{else}}
+	{{#if shared_plan}}
+	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-button-add-to-my-plans" style="width:100%; margin-bottom:5px; margin-top:10px">
+  		Add to my plans
+	</button>
+	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-button-dismiss" style="width:100%; margin-bottom:5px; margin-top:10px">
+  		Dismiss
+	</button>	
+	{{else}}
+	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-button-saveplan js-button-add-to-my-plans" style="width:100%; margin-bottom:5px; margin-top:10px">
+  		Add to my plans
+	</button>
+	{{/if}}
+{{/if}}
+
+{{#if my plan.user_id}}
+
+	<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1" style="margin-top:10px">
+	  	<input type="radio" id="option-1" class="mdl-radio__button js-public" name="options" value="public" 
+	  	{{option 'public'}} >
+	  	<span class="mdl-radio__label">Public</span>
+ 		</label>
+ 	<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect js-private" for="option-2" style="margin-top:10px">
+		<input type="radio" id="option-2" class="mdl-radio__button" name="options" value="private" {{option 'private'}} >
+		<span class="mdl-radio__label">Private</span>
+ 	</label>
+{{/if}}
+
+	<h6 class="left-align">Name: {{plan.name}}</h6>
+	<h6 class="left-align">Created by: {{plan.creator_name}}</h6>
+	<h6 class="left-align">Created at: {{plan.date_aded}}</h6>
+	<h6 class="left-align">City: {{plan.city}} </h6>
+	
+	<hr/>
+
+	<h5>Places: </h5>
+	{{#each plan.places}}
+	  {{> SavePlanPlaceListItemLayout}}
+	{{/each}}
+	 </ul>
+
+  </div>
+</div>
+
+
+ 
+ </div>
+
+
+</main>
+
+</div>
+
+<div id="pop-up-friends-list" class="friends-list-select" style="display:none; background-color:rgb(63,81,181)">
+	{{> FriendsSelectListLayout}}
+</div>
+
+</template>

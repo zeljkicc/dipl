@@ -49,6 +49,7 @@ Template.LoginLayout.events({
                 var user = result;
                 if(user!=undefined){
               console.log("Login success. " + user.username);
+              alert("Login success");
 
               Session.set("userdata", user);
               
@@ -63,11 +64,11 @@ db.transaction(function (txn) {
     console.log("Created database if not exist"); // {"answer": 42} 
   }); 
 
-  txn.executeSql('CREATE TABLE IF NOT EXISTS data (id TEXT,username TEXT, password TEXT, firstname TEXT, lastname TEXT, telephone TEXT);', [], function (tx, res) {
+  txn.executeSql('CREATE TABLE IF NOT EXISTS data (id TEXT,username TEXT, password TEXT, firstname TEXT, lastname TEXT, telephone TEXT, image TEXT);', [], function (tx, res) {
     console.log("Created database if not exist"); // {"answer": 42} 
   });
 
-  txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?);", [user._id, user.username, user.password, user.firstname, user.lastname, user.telephone], function (tx, res) {
+  txn.executeSql("INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?);", [user._id, user.username, user.password, user.firstname, user.lastname, user.telephone, user.image], function (tx, res) {
     console.log("Inserted values"); // {"answer": 42} 
   });
 
@@ -82,6 +83,7 @@ FlowRouter.go('home');
 
             }
             else{
+              alert("Login failed. Try again.");
               console.log("Login failed.");
             } 
 

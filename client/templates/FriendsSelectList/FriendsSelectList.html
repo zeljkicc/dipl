@@ -1,0 +1,14 @@
+<template name="FriendsSelectListLayout">
+
+	<h4 style="color:white">Share plan with your friends:</h4>
+
+	<ul class="friend-list-select mdl-list" style="background-color:white; border-radius:20px; width:100%">
+		{{#each friends}}
+			{{> FriendsSelectListItemLayout}}
+		{{/each}}
+	</ul>
+
+	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent js-share-plan" style="width:100%">
+  		Share
+	</button>
+</template>

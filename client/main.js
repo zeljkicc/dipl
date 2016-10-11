@@ -13,6 +13,12 @@ var db = null;
 
 dbUserdata = null; 
 dbMapdata = null;
+dbPlans = null;
+
+
+
+
+
 
  
 document.addEventListener('deviceready', function() {
@@ -32,6 +38,7 @@ if(dbUserdata==null){
 //dbUserdata = sqlitePlugin.openDatabase('userdata.db');
 dbUserdata = window.sqlitePlugin.openDatabase({name: "userdata.db", location: 'default'});
 }
+
 
 
 
@@ -101,7 +108,12 @@ dbUserdata = window.sqlitePlugin.openDatabase({name: "userdata.db", location: 'd
 dbMapdata = sqlitePlugin.openDatabase({name: 'mymaps.db', location:'default'});
 
 var db = dbMapdata;
+
+
+
 db.transaction(function (txn) {
+
+
 
   /*txn.executeSql('DROP TABLE IF EXISTS data;', [], function (tx, res) {
     console.log("Created database if not exist"); // {"answer": 42} 
@@ -216,9 +228,7 @@ Session.set('myMaps', res.rows._array);
 
 
 
-Template.AddNewLayout.onRendered(function(){
 
-});
 
 
 
@@ -245,6 +255,8 @@ function onOffline() {
 function onOnline() {
     console.log("Went online :)");
 
+    //brisanje svih offline planova iz Minimonga - da li je dobro mesto
+    OfflinePlans.remove({});
 
 //da li je dobro mesto
     Session.set('open-map', undefined);
@@ -257,7 +269,30 @@ if(navigator.connection.type != Connection.NONE){
   //  var db = sqlitePlugin.openDatabase('userdata.db');
    var db = dbUserdata;
 
+
+      var db1 = null;
+  if(dbPlans == null){
+//db2 = sqlitePlugin.openDatabase('mymaps.db');
+    db1 = sqlitePlugin.openDatabase({name:'plans.db', location:'default'});
+    dbPlans = db1;
+
+}
+else{
+db1 = dbPlans;
+}
+
+  db1.transaction(function (txn) {
+
+                   txn.executeSql("SELECT * FROM offlineplans;", [], function (tx, res) {
+    console.log("Na pocetku ctanje  : Offline plans first line in SQLite for plan " + res.rows.item(0).name + " " + res.rows.item(0).city + " " + res.rows.item(0).creatorname + " " + JSON.parse(res.rows.item(0).places)  + " waypoints: " + JSON.parse(res.rows.item(0).allwaypoints)); // {"answer": 42} 
+  }, function(error){console.log("Error " + error.message);});
+
+});
             db.transaction(function (txn) {
+
+
+
+
 
 txn.executeSql("SELECT * FROM pendingplaces;", [], function (tx, res) {
     console.log("Pending places: " + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
@@ -331,6 +366,9 @@ Meteor.call('insertComments', array, function(error, result){
 
   });
 
+
+  
+
  
 
   });
@@ -387,9 +425,12 @@ Template.MapLayout.events({
     e.preventDefault();
 
     //map.locate({setView: true, maxZoom: 16});
+    
+    //map.panTo(Session.get('location'));
+    //map.setZoom(16, {animate:true});
 
-    map.panTo(Session.get('location'));
-    //map.setZoom(16);
+     map.setView(Session.get('location'), 16, {animation: true});
+ 
 
     //console.log(Session.get('location'));
   }
@@ -404,10 +445,126 @@ var myCircle;
 var markersPlaces = [];
 var layerGroupMarkers = new L.LayerGroup();
 
+var _dep = new Deps.Dependency();
+polyline = undefined;
+control = undefined;
+all_waypoints = undefined;
+var start_point;
+var end_point;
+
+//za smestanje kreiranih markera, da bi kasnije mogli da promenimo popup
+var dictionary = {};
+
  Template.MapLayout.onRendered(function(){
+
    L.Icon.Default.imagePath = '/images';
 layerGroupMarkers = new L.LayerGroup();
   var template =  this;
+
+
+  this.autorun(function(){
+      _dep.depend();
+        if(start_point){
+        map.removeLayer(start_point);
+        //polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+      }
+      if(end_point){
+        map.removeLayer(end_point);
+      }
+
+      if(FlowRouter.getRouteName() == "plandetails"){
+            var id = FlowRouter.getParam("id");
+            var plan;
+            if(navigator.onLine)
+            plan = Plans.findOne({_id: id});
+        	else if(Meteor.isCordova){plan = OfflinePlans.findOne({_id: id});}
+        	else alert("Offline. Please reconect.");
+
+        if(map){
+           //L.Routing.line({waypoints: plan.all_waypoints}).addTo(map);
+           if(plan.all_waypoints){
+           polyline = L.polyline(plan.all_waypoints, {color: 'red'}).addTo(map);
+           map.fitBounds(polyline.getBounds());
+         }
+
+            if(plan.all_waypoints[0] && map)
+            start_point = L.circle( plan.all_waypoints[0], 50, {color:'blue'} ).addTo(map);
+          if(plan.all_waypoints[plan.all_waypoints.length-1] && map)
+      end_point = L.circle( plan.all_waypoints[plan.all_waypoints.length-1], 50, {color:'red'} ).addTo(map);
+        }
+
+      }
+      else{
+      var places = PlanPlaces.find({}, {sort: {pos: 1}}).fetch();
+      var latlngs = [];
+      for(var i =0; i<places.length; i++){
+        latlngs.push((places[i].loc.coordinates).reverse());
+      }
+      if(map){
+        //map.locate({setView: true, maxZoom: 16});
+        if(control){
+        //map.removeControl(control);
+        control.setWaypoints([]);
+        if(polyline){
+      map.removeLayer(polyline);
+    }
+      }
+    
+
+      if(navigator.onLine){
+      control =  L.Routing.control({
+            waypoints: latlngs,
+            router: L.Routing.mapbox('pk.eyJ1IjoicGV0cmljODc4IiwiYSI6ImNpdHhkamRudDAwMzkyeXAxa3MyeTV5aWwifQ.EKdOGxKq8BzE_5IYtXLPBQ', 
+            {        
+            profile: 'mapbox/walking'
+        }),
+            show: false,
+            createMarker: function() {}
+
+          }).addTo(map);
+    }
+    else if(Meteor.isCordova){
+
+       //all_waypoints = route.coordinates;
+
+    if(map)
+    polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
+
+    }
+    else{
+      alert("You are offline");
+    }
+   
+
+if(latlngs[0] && map)
+      start_point = L.circle( latlngs[0], 50, {color:'blue'} ).addTo(map);
+if(latlngs[latlngs.length-1] && map)
+      end_point = L.circle( latlngs[latlngs.length-1], 50, {color:'red'} ).addTo(map);
+
+
+
+      control.on('routeselected', function(e) {
+    var route = e.route;
+    // Do something with the route here
+    all_waypoints = route.coordinates;
+  /*  if(polyline){
+      map.removeLayer(polyline);
+    } */
+    if(map)
+    polyline = L.polyline(route.coordinates, {color: 'red'}).addTo(map);
+  });
+
+    }
+
+        } //end of else
+
+        
+
+    });
+
+
+  
 
 
 
@@ -463,8 +620,8 @@ map.locate({setView: true, maxZoom: 16});
        }
        if(myMarker)
       map.removeLayer(myMarker);
-    if(myCircle)
-      map.removeLayer(myCircle);
+  //  if(myCircle)
+    //  map.removeLayer(myCircle);
 
    
       newPlaceMarker = new L.marker(e.latlng).addTo(map);
@@ -547,8 +704,8 @@ map = L.map('map', {
        }
        if(myMarker)
       map.removeLayer(myMarker);
-    if(myCircle)
-      map.removeLayer(myCircle);
+    //if(myCircle)
+      //map.removeLayer(myCircle);
 
    
       newPlaceMarker = new L.marker(e.latlng).addTo(map);
@@ -615,11 +772,17 @@ layerInstance.on('loading', function (event) {
 
 });
 
+
 layerInstance.on('load', function (event) {
     console.log("loading map finished");
     if(window.cordova!=undefined){
   //  cordova.plugin.pDialog.dismiss();//puca!!!!!
   }
+  //var instance = Template.instance();
+  if(template.data.firsttime == true){
+    _dep.changed();
+    template.data.firsttime =false;
+  } 
 });
 
 
@@ -672,8 +835,8 @@ var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
     // 
     function geolocationSuccess(position) {
       //  var element = document.getElementById('geolocation');
-        console.log( 'Latitude: '  + position.coords.latitude +
-                            ' Longitude: ' + position.coords.longitude);
+     /*   console.log( 'Latitude: '  + position.coords.latitude +
+                            ' Longitude: ' + position.coords.longitude); */
 if(map){
 if(Session.get('viewSet')!= true){
 if(navigator.onLine && Session.get('open-map')){
@@ -776,9 +939,9 @@ function onLocationFound(e) {
           myMarker.dragging.enable();
         }
 
-    myCircle = L.circle(e.latlng, radius).addTo(map);
+   // myCircle = L.circle(e.latlng, radius).addTo(map);
 
-     L.circle(e.latlng, 1*1000).addTo(map); //radius krug
+   //  L.circle(e.latlng, 1*1000).addTo(map); //radius krug
 
    
     Session.set("location", e.latlng);
@@ -809,12 +972,32 @@ else if(Meteor.isCordova){
       var db = dbUserdata;
 
             db.transaction(function (txn) {
-
+OfflinePlaces.remove({});
+//za offline places
 txn.executeSql("SELECT * FROM offlineplaces WHERE city = ?;", [Session.get('open-map')], function (tx, res) {
     console.log("Offline places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
 
 var array = [];
-OfflinePlaces.remove({});
+//OfflinePlaces.remove({});
+for(var i = 0; i< res.rows.length; i++){
+  array.push(res.rows.item(i));
+ // array[i]._id = res.rows.item(i)._id;
+
+ OfflinePlaces.insert(res.rows.item(i));
+}
+      setMarkersSQLite(array);
+
+
+
+  });
+
+
+//za pending places
+txn.executeSql("SELECT * FROM pendingplaces WHERE city = ?;", [Session.get('open-map')], function (tx, res) {
+    console.log("Pending places for " + Session.get('open-map') + " :" + JSON.stringify(res.rows.length) + " " + JSON.stringify(res.rows.length)); // {"answer": 42} 
+
+var array = [];
+//OfflinePlaces.remove({});
 for(var i = 0; i< res.rows.length; i++){
   array.push(res.rows.item(i));
  // array[i]._id = res.rows.item(i)._id;
@@ -841,54 +1024,188 @@ for(var i = 0; i< res.rows.length; i++){
 
 function setMarkersMongo(places){
   
-if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
+/*if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
       layerGroupMarkers.clearLayers();
       map.removeLayer(layerGroupMarkers);
-    }
+    }*/
 
     for (i = 0; i < places.length; i++) { //da se ubaci switch case??
 
-  if(places[i].type == "hotel"){
-    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).on('click', onClickMarker));
-    
-    
-  }
-  else if(places[i].type == "restaurant"){
-    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: restaurantIcon, id: places[i]._id}).on('click', onClickMarker));
-  }
-  else{
-    layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse()).on('click', onClickMarker));
-  }
+  //if(places[i].type == "hotel"){
+    //layerGroupMarkers.addLayer(L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id}).on('click', onClickMarker));
+   var marker = L.marker(places[i].loc.coordinates.reverse(), {icon: hotelIcon, id: places[i]._id});
+
+   switch(places[i].type){
+    case "hotel":
+      marker.setIcon(hotelIcon);
+      break;
+    case "restaurant":
+      marker.setIcon(restaurantIcon);
+      break;
+        case "amphitheater":
+      marker.setIcon(amphitheaterIcon);
+      break;
+        case "museum":
+      marker.setIcon(museumIcon);
+      break;
+        case "fortress":
+      marker.setIcon(tvrdjavaIcon);
+      break;
+        case "library":
+      marker.setIcon(libraryIcon);
+      break;
+        case "cinema":
+      marker.setIcon(cinemaIcon);
+      break;
+        case "fountain":
+      marker.setIcon(fountainIcon);
+      break;
+        case "gallery":
+      marker.setIcon(galleryIcon);
+      break;
+        case "music":
+      marker.setIcon(musicIcon);
+      break;
+        case "planetarium":
+      marker.setIcon(planetariumIcon);
+      break;
+        case "monument":
+      marker.setIcon(monumentIcon);
+      break;
+        case "church":
+      marker.setIcon(churchIcon);
+      break;
+        case "theater":
+      marker.setIcon(theaterIcon);
+      break;   
+        
+    }
+
+   map.addLayer(marker);
+   
+     
+     dictionary[places[i]._id] = marker;
+     if(PlanPlaces.findOne({_id:places[i]._id}) == undefined){
+
+      var marker = marker.bindPopup('<h4>' + places[i].name + '</h4>' +
+    '<div><a href="/placedetails/'+ places[i]._id + '"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" ><i class="material-icons" >remove_red_eye</i></button></a> ' +
+    '<button id="add_' + places[i]._id + '" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored trigger" ><i class="material-icons">add</i></button>   </div>');
+
+     $('#map').on('click', '#add_' + places[i]._id, function(e) {      
+
+        var place = Places.findOne({_id: ($(this).attr('id')).substr(4)});
+        //alert(place.name);
+        console.log("Dodato u rutu " + place.name);
+
+        place.pos = PlanPlaces.find().count() + 1;
+        PlanPlaces.insert(place);
+        setPlaces();
+        _dep.changed();
+      
+      });
+
+
+
+    }//end if ako je place dodat u PlanPlaces
+    else{
+       var marker = marker.bindPopup('<h4>' + places[i].name + '</h4>' +
+    '<div><a href="/placedetails/'+ places[i]._id + '"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" ><i class="material-icons" >remove_red_eye</i></button></a> ' +
+    '<button id="remove_' + places[i]._id + '" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored trigger" ><i class="material-icons">remove</i></button>   </div>');
+
+      $('#map').on('click', '#remove_' + places[i]._id, function(e) {      
+
+        var place1 = PlanPlaces.findOne({_id: ($(this).attr('id')).substr(7)});
+        //alert(place.name);
+        console.log("Izbaceno iz rute " + place1.name);
+
+        for(var i = place1.pos; i < PlanPlaces.find().count() + 1; i++){
+          PlanPlaces.find({pos: i + 1}).fetch().pos = i;
+        }
+        //place.pos = PlanPlaces.find().count() + 1;
+        PlanPlaces.remove(place1);
+         setPlaces();
+         _dep.changed();
+
+     
+      });
+
+    }
+
 }
 
-
-console.log(layerGroupMarkers);
-map.addLayer(layerGroupMarkers);
 }
 
 
 
 function setMarkersSQLite(places){
-if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
+/*if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
       layerGroupMarkers.clearLayers();
       map.removeLayer(layerGroupMarkers);
-    }
+    }*/
 
 
     for (i = 0; i < places.length; i++) { //da se ubaci switch case??
       var place = places[i]
       var place_id = OfflinePlaces.findOne({mid: place.mid})._id;
-  if(place.type == "hotel"){
-    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: hotelIcon, id: place_id}).on('click', onClickMarker));
+
+      var marker = L.marker([place.lat, place.lng], {icon: hotelIcon, id: place_id}).on('click', onClickMarker)
+
+    layerGroupMarkers.addLayer(marker);
+
+      switch(place.type){
+    case "hotel":
+      marker.setIcon(hotelIcon);
+      break;
+    case "restaurant":
+      marker.setIcon(restaurantIcon);
+      break;
+        case "amphitheater":
+      marker.setIcon(amphitheaterIcon);
+      break;
+        case "museum":
+      marker.setIcon(museumIcon);
+      break;
+        case "fortress":
+      marker.setIcon(tvrdjavaIcon);
+      break;
+        case "library":
+      marker.setIcon(libraryIcon);
+      break;
+        case "cinema":
+      marker.setIcon(cinemaIcon);
+      break;
+        case "fountain":
+      marker.setIcon(fountainIcon);
+      break;
+        case "gallery":
+      marker.setIcon(galleryIcon);
+      break;
+        case "music":
+      marker.setIcon(musicIcon);
+      break;
+        case "planetarium":
+      marker.setIcon(planetariumIcon);
+      break;
+        case "monument":
+      marker.setIcon(monumentIcon);
+      break;
+        case "church":
+      marker.setIcon(churchIcon);
+      break;
+        case "theater":
+      marker.setIcon(theaterIcon);
+      break;   
+        
+    }
     
-    
-  }
-  else if(place.type == "restaurant"){
+  
+  
+ /* else if(place.type == "restaurant"){
     layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: restaurantIcon, id: place_id}).on('click', onClickMarker));
   }
   else{
     layerGroupMarkers.addLayer(L.marker([place.lat, place.lng]).on('click', onClickMarker));
-  }
+  } */
 }
 
 
@@ -901,7 +1218,7 @@ map.addLayer(layerGroupMarkers);
 //za ikonice markera
 var PlaceIcon = L.Icon.extend({
     options: {
-      shadowUrl: 'images/marker-shadow.png',
+      shadowUrl: '/images/marker-shadow.png',
       iconSize:     [32, 37], // size of the icon
       shadowSize:   [41, 41], // size of the shadow
       iconAnchor:   [16, 37], // point of the icon which will correspond to marker's location
@@ -909,8 +1226,21 @@ var PlaceIcon = L.Icon.extend({
     }
 });
 
-var hotelIcon = new PlaceIcon({iconUrl: 'images/hotel_0star.png'}),
-    restaurantIcon = new PlaceIcon({iconUrl: 'images/restaurant.png'});
+var hotelIcon = new PlaceIcon({iconUrl: '/images/hotel_0star.png'}),
+    restaurantIcon = new PlaceIcon({iconUrl: '/images/restaurant.png'}),
+    amphitheaterIcon = new PlaceIcon({iconUrl: '/images/amphitheater-2.png'}),
+    museumIcon = new PlaceIcon({iconUrl: '/images/art-museum-2.png'}),
+    tvrdjavaIcon = new PlaceIcon({iconUrl: '/images/tvrdjava.png'}),
+    libraryIcon = new PlaceIcon({iconUrl: '/images/book.png'}),
+    cinemaIcon = new PlaceIcon({iconUrl: '/images/cinema.png'}),
+    fountainIcon = new PlaceIcon({iconUrl: '/images/fountain-2.png'}),
+    galleryIcon = new PlaceIcon({iconUrl: '/images/museum-paintings.png'}),
+    musicIcon = new PlaceIcon({iconUrl: '/images/music_live.png'}),
+    planetariumIcon = new PlaceIcon({iconUrl: '/images/planetarium-2.png'}),
+    monumentIcon = new PlaceIcon({iconUrl: '/images/statue-2.png'}),
+    churchIcon = new PlaceIcon({iconUrl: '/images/church.png'}),
+    theaterIcon = new PlaceIcon({iconUrl: '/images/theater.png'});
+
 
     Template.MapLayout.onDestroyed(function(){
         navigator.geolocation.clearWatch(Session.get("watchID"));
@@ -919,3 +1249,9 @@ var hotelIcon = new PlaceIcon({iconUrl: 'images/hotel_0star.png'}),
       //  Session.set('open-map', undefined);
       //  delete Session.keys.open-map;
     });
+
+
+    Template.MapLayout.onCreated(function(){
+         this.data.firsttime = true;
+    });
+

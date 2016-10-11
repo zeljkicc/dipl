@@ -261,3 +261,72 @@ margin:0px;
 .comments-list{
 	width:100%;
 }
+
+.maps-list{
+	width:100%;
+}
+
+.friend-list{
+	width: 90%;
+	margin: auto;
+}
+
+.leaflet-popup-content{
+	text-align:center;
+}
+
+.leaflet-control-container .leaflet-routing-container-hide {
+    display: none;
+}
+
+.plans-list-tab{
+	width:33%;
+	padding-left:0px;
+	padding-right:0px;
+}
+
+.plans-list{
+	width: 90%;
+	margin:auto;
+	
+}
+
+.plans-list li{
+	margin-top:10px;
+	margin-bottom:5px;
+}
+
+.js-save-plan, .js-plans{
+	height:40px;
+	border-radius:0%;
+}
+
+.b-modal{
+	width:100%;
+}
+.friends-list-select{
+	width:80%;
+	margin:auto;
+	background-color: white;
+	border-radius: 10px;
+	padding:10px;
+	border:1px solid white;
+}
+
+#image1-div, #image2-div, #image3-div{
+	float:left;
+	width:33%;
+	border-radius:10px;
+	margin-top:20px;
+}
+
+li,a{
+	text-decoration:none;
+}
+
+.plan-list-item{
+	border: 1px solid rgb(63,81,181);
+	border-radius:10px;
+	padding:10px;
+	margin:10px;
+}
