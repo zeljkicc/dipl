@@ -11,7 +11,7 @@ Template.SavePlanLayout.onRendered(function(){
 	var places = PlanPlaces.find().fetch();
 	var name = $('.js-planname').val();
 	var city = $('.js-plancity').val();
-	var option = $("input[name='options']").val();
+	var option = $("input[name='options']:checked").val();
 	var user_id = Session.get('userdata')._id;
 	var date_added = new Date();
 	var creator_name = Session.get('userdata').firstname + " " + Session.get('userdata').lastname;
@@ -82,17 +82,19 @@ db = dbPlans;
 		});
 	}
 		else if(Meteor.isCordova){
-			//perzistiranje u sqlite -  pendingplans za kasnije slanje na server
-			var db = dbUserdata;
+			//perzistiranje JSON-a u fajlu u folderu pendingplans
 
-            db.transaction(function (txn) {
- txn.executeSql('CREATE TABLE IF NOT EXISTS pendingplans (name TEXT, city TEXT, userid INTEGER, creatorname TEXT, places TEXT);', [], function (tx, res) {
-    console.log("Created database pendingplans if not exist"); // {"answer": 42} 
-  });
-
-//for(var i=0; i < new_places.length; i++){
-  txn.executeSql("INSERT INTO pendingplans VALUES (?, ?, ?, ?, ?);", [ name, city, user_id, creator_name, JSON.stringify(places)], function (tx, res) {
-    console.log("Inserted values in SQLite (pendingplans) for plan " + name + " " + city + " " + creatorname + " " + JSON.stringify(places)); // {"answer": 42} 
+      alert ("Perzistiranje u folderu pendingplans u fajlu " + name + ".json");
+		writeToFile(name + '.json', {//////!!!!!!!!!!!!!!!!!!!!!!!!!
+  places : places,
+  name : name,
+  option : option,
+  user_id : user_id,
+  date_aded : date_added,
+  all_waypoints : all_waypoints,
+  creator_name : creator_name,
+  city : city
+ });
 
 
   OfflinePlans.insert({
@@ -103,17 +105,11 @@ db = dbPlans;
   		places: places
   });
 
-  }, function(error) {
-    console.log('Transaction ERROR: ' + error.message);
-  });
-
-    txn.executeSql("SELECT * FROM pendingplans;", [], function (tx, res) {
-    console.log("Pending plans first line in SQLite for plan " + res.rows.item(0).name + " " + res.rows.item(0).city + " " + res.rows.item(0).creatorname + " " + JSON.parse(res.rows.item(0).places) ); // {"answer": 42} 
-  });
+ 
 
 
 
-});
+
 
 
 		}

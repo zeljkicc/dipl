@@ -11,5 +11,10 @@ Template.FriendsListLayout.helpers({
 	friends: function(){
 		//treba da vrati prijatelje
 		return Users.find();
+	}, 
+	addnewfriend: function(){
+		if(FlowRouter.getRouteName() == "addnewfriend")
+			return false;
+		else return true;
 	}
 });

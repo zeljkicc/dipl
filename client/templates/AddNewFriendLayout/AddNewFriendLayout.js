@@ -15,4 +15,26 @@ Template.AddNewFriendLayout.events({
 				$('.js-addfriend-input').val(" ");
 		});
 	}
+});
+
+
+Template.AddNewFriendLayout.onCreated(function(){
+	var userdata = Session.get('userdata');
+var instance = this;      //promenjiva sesije resubscribe - reaktivni izvor
+this.autorun(function(){
+	instance.subscribe('friends', [userdata._id, Session.get('resubscribe')]);
 })
+	
+});
+
+Template.AddNewFriendLayout.helpers({
+	friends: function(){
+		//treba da vrati prijatelje
+		return Users.find();
+	}, 
+	addnewfriend: function(){
+		if(FlowRouter.getRouteName() == "addnewfriend")
+			return false;
+		else return true;
+	}
+});

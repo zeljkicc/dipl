@@ -2,8 +2,6 @@
 
 L.TileLayer.MBTiles = L.TileLayer.extend({
 
-	
-
 	mbTilesDB: null,
 
 	initialize: function(url, options, db) {
@@ -33,11 +31,6 @@ L.TileLayer.MBTiles = L.TileLayer.extend({
 
 
 		var layer = this;
-		
-		//Pukne i ne izvrsava se vise transakcije, samo se povecava broj u redu
-	//	this.mbTilesDB._txnQueue.length = 0;
-		//ispraviti, mozda Session promenjiva, pa kada je reazlicito od nula velicina 
-		//queue-a da se ponovo otvori baza (inicijalizuje layer) ?
 
 		this.mbTilesDB.transaction(function(txn) {
 			txn.executeSql("select quote(tile_data) as tile_data from tiles where zoom_level = ? and tile_column = ? and tile_row = ?;", 
@@ -50,9 +43,6 @@ L.TileLayer.MBTiles = L.TileLayer.extend({
 				console.log(error);
 			});
 		}); 
-
-
-
 		
 	},
 }); 

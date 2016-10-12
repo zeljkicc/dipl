@@ -1137,6 +1137,131 @@ function setMarkersMongo(places){
 
 
 
+
+
+
+/*function setMarkersSQLite(places){
+
+
+
+    for (i = 0; i < places.length; i++) { //da se ubaci switch case??
+      var place = places[i]
+      var place_id = OfflinePlaces.findOne({mid: place.mid})._id;
+
+      var marker = L.marker([place.lat, place.lng], {icon: hotelIcon, id: place_id});
+
+
+      dictionary[place_id] = marker;
+ 
+     if(PlanPlaces.findOne({_id:place_id}) == undefined && PlanPlaces.findOne({name:place.name}) == undefined){
+
+      var marker = marker.bindPopup('<h4>' + place.name + '</h4>' +
+    '<div><a href="/placedetails/'+ place_id + '"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" ><i class="material-icons" >remove_red_eye</i></button></a> ' +
+    '<button id="add_' + place_id + '" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored trigger" ><i class="material-icons">add</i></button>   </div>');
+
+     $('#map').on('click', '#add_' + place_id, function(e) {      
+
+       // var place = Places.findOne({_id: ($(this).attr('id')).substr(4)});
+        //alert(place.name);
+        console.log("Dodato u rutu " + place.name);
+
+        place.pos = PlanPlaces.find().count() + 1;
+        PlanPlaces.insert(place);
+        setPlaces();
+        _dep.changed();
+      
+      });
+
+
+
+    }//end if ako je place dodat u PlanPlaces
+    else{
+       var marker = marker.bindPopup('<h4>' + place.name + '</h4>' +
+    '<div><a href="/placedetails/'+ place_id + '"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" ><i class="material-icons" >remove_red_eye</i></button></a> ' +
+    '<button id="remove_' + place_id + '" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored trigger" ><i class="material-icons">remove</i></button>   </div>');
+
+      $('#map').on('click', '#remove_' + place_id, function(e) {      
+
+        var place1 = PlanPlaces.findOne({_id: ($(this).attr('id')).substr(7)});
+        //alert(place.name);
+        console.log("Izbaceno iz rute " + place1.name);
+
+        for(var i = place1.pos; i < PlanPlaces.find().count() + 1; i++){
+          PlanPlaces.find({pos: i + 1}).fetch().pos = i;
+        }
+        //place.pos = PlanPlaces.find().count() + 1;
+        PlanPlaces.remove(place1);
+         setPlaces();
+         _dep.changed();
+
+     
+      });
+
+    }
+
+
+    layerGroupMarkers.addLayer(marker);
+
+      switch(place.type){
+    case "hotel":
+      marker.setIcon(hotelIcon);
+      break;
+    case "restaurant":
+      marker.setIcon(restaurantIcon);
+      break;
+        case "amphitheater":
+      marker.setIcon(amphitheaterIcon);
+      break;
+        case "museum":
+      marker.setIcon(museumIcon);
+      break;
+        case "fortress":
+      marker.setIcon(tvrdjavaIcon);
+      break;
+        case "library":
+      marker.setIcon(libraryIcon);
+      break;
+        case "cinema":
+      marker.setIcon(cinemaIcon);
+      break;
+        case "fountain":
+      marker.setIcon(fountainIcon);
+      break;
+        case "gallery":
+      marker.setIcon(galleryIcon);
+      break;
+        case "music":
+      marker.setIcon(musicIcon);
+      break;
+        case "planetarium":
+      marker.setIcon(planetariumIcon);
+      break;
+        case "monument":
+      marker.setIcon(monumentIcon);
+      break;
+        case "church":
+      marker.setIcon(churchIcon);
+      break;
+        case "theater":
+      marker.setIcon(theaterIcon);
+      break;   
+        
+    }
+    
+  
+}
+
+
+console.log(layerGroupMarkers);
+map.addLayer(layerGroupMarkers);
+
+
+
+} */
+
+
+
+
 function setMarkersSQLite(places){
 /*if(layerGroupMarkers!=null){ //ne uklanja layer !!!!!!!!!!!!!!!!!!!!!!!!!!!1
       layerGroupMarkers.clearLayers();
@@ -1197,18 +1322,9 @@ function setMarkersSQLite(places){
       break;   
         
     }
-    
-  
-  
- /* else if(place.type == "restaurant"){
-    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng], {icon: restaurantIcon, id: place_id}).on('click', onClickMarker));
   }
-  else{
-    layerGroupMarkers.addLayer(L.marker([place.lat, place.lng]).on('click', onClickMarker));
-  } */
-}
 
-
+  
 console.log(layerGroupMarkers);
 map.addLayer(layerGroupMarkers);
 }
