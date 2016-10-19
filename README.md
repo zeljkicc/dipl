@@ -4,7 +4,7 @@ Files for Meteor project TripPlanner. TripPlanner is a tourist application for p
 
 ## Motivation
 
-This project is a result of a final year thesis of two students at Faculty of Electronic Engineering, Jelena Ljubenovic and Željko Lakovic, under the mentorship of Doc. dr Aleksandar Stanimirovic.
+This project is a result of final year thesis of two students at Faculty of Electronic Engineering, Jelena Ljubenovic and Željko Lakovic, under the mentorship of Doc. dr Aleksandar Stanimirovic.
 
 ## Installation
 
